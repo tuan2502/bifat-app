@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "1030614287603",
+    "project_id": "laundry-bifat",
+    "storage_bucket": "laundry-bifat.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1030614287603:android:0e46ead034e8f662f46386",
+        "android_client_info": {
+          "package_name": "com.example.bifat_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1030614287603-gk4kpk84lfho96nlh7rm6vgl6ck4n152.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzeZVnzqIRqo4MrUvaxmDhk81DEsSZ5OM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1030614287603-6dmtf275k768fbdiok7f3t6r7v5mqngv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1030614287603-8pqvnchnl95mrm2dnc645qk349hm976q.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.bifatFlutter"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
