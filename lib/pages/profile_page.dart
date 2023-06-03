@@ -34,7 +34,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ElevatedButton(
               child: Text("Logout"),
               onPressed: () async {
-                await FirebaseServices().googleSignOut();
+                await FirebaseServices().signOut();
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => LoginPage()));
               },

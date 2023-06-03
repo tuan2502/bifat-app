@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
 import '../styles/color.dart';
+import '../pages/PaymentSuccess.dart';
 
 class OrderScreen extends StatelessWidget {
   const OrderScreen({super.key});
@@ -58,6 +58,23 @@ class OrderScreen extends StatelessWidget {
             ),
           ),
         ),
+        // Container(
+        //   margin: const EdgeInsets.only(left: 15, top: 20),
+        //   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        //   decoration: BoxDecoration(
+        //     color: wBlack12,
+        //     borderRadius: BorderRadius.circular(10),
+        //   ),
+        //   width: 370,
+        //   child: TextFormField(
+        //     decoration: const InputDecoration(
+        //         border: InputBorder.none,
+        //         hintText: "Full Name",
+        //         hintStyle: TextStyle(
+        //           fontSize: 20,
+        //         )),
+        //   ),
+        // ),
         Container(
           margin: const EdgeInsets.only(left: 15, top: 20),
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
@@ -69,7 +86,7 @@ class OrderScreen extends StatelessWidget {
           child: TextFormField(
             decoration: const InputDecoration(
                 border: InputBorder.none,
-                hintText: "Full Name",
+                hintText: "Số điện thoại",
                 hintStyle: TextStyle(
                   fontSize: 20,
                 )),
@@ -86,46 +103,76 @@ class OrderScreen extends StatelessWidget {
           child: TextFormField(
             decoration: const InputDecoration(
                 border: InputBorder.none,
-                hintText: "Phone",
+                hintText: "Địa chỉ",
                 hintStyle: TextStyle(
                   fontSize: 20,
                 )),
           ),
         ),
-        Container(
-          margin: const EdgeInsets.only(left: 15, top: 20),
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-          decoration: BoxDecoration(
-            color: wBlack12,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          width: 370,
-          child: TextFormField(
-            decoration: const InputDecoration(
-                border: InputBorder.none,
-                hintText: "Address",
-                hintStyle: TextStyle(
-                  fontSize: 20,
-                )),
-          ),
-        ),
-        const SizedBox(height: 50),
+        const SizedBox(height: 30),
         InkWell(
           onTap: () => submitOrder(context),
           child: Container(
             alignment: Alignment.center,
-            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-            margin: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+            margin: const EdgeInsets.symmetric(horizontal: 110),
             decoration: BoxDecoration(
               color: Colors.redAccent,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: const Text(
-              "Order Now",
-              style: TextStyle(
-                color: wWhite,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+            child: TextButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text('Xác nhận đặt hàng'),
+                      content:
+                          const Text('Bạn có chắc chắn muốn đặt hàng không?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            // Đóng dialog
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text(
+                            'Hủy',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                        const SizedBox(width: 160),
+                        TextButton(
+                          onPressed: () {
+                            // Hủy đặt hàng
+                            // Thực hiện đặt hàng ở đây
+                            //submitOrder(context);
+                            //Navigator.of(context).pop();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const PaymentSuccessPage()),
+                            );
+                          },
+                          child: const Text(
+                            'Đồng ý',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              child: const Text(
+                "Xác nhận dịch vụ",
+                style: TextStyle(
+                  color: wWhite,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),

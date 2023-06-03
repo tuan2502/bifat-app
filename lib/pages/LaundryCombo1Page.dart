@@ -1,9 +1,8 @@
 import 'dart:async';
 
+import 'package:bifat_app/components/Checkbox.dart';
 import 'package:flutter/material.dart';
 import '../styles/color.dart';
-import '../components/Checkbox.dart';
-import '../components/ServiceAppBar.dart';
 import 'CartPage.dart';
 
 class LaundryCombo1Page extends StatefulWidget {
@@ -111,13 +110,24 @@ class _LaundryCombo1PageState extends State<LaundryCombo1Page> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Giặt Combo 1',
+          style: TextStyle(
+              color: wBlack,
+              fontSize: 23,
+              fontWeight: FontWeight.bold // Thay đổi màu chữ của tiêu đề
+              ),
+        ),
+        iconTheme: const IconThemeData(
+            color: wBlack, size: 30 // Thay đổi màu của biểu tượng nút Back
+            ),
+        backgroundColor: wPurBlue,
+      ),
       backgroundColor: Colors.white,
       body: ListView(
         shrinkWrap: true,
         children: [
-          const ServiceAppBar(
-            namePage: "Giặt thường",
-          ),
           Padding(
             padding: const EdgeInsets.all(0),
             child: Image.asset(
@@ -130,8 +140,8 @@ class _LaundryCombo1PageState extends State<LaundryCombo1Page> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
                       'Giặt Combo 1',
@@ -310,21 +320,21 @@ class _LaundryCombo1PageState extends State<LaundryCombo1Page> {
                     //   ),
                     //   cursorColor: wBlack,
                     // ),
-                    TextFormField(
-                      controller: chatLieuVaiController,
-                      decoration: const InputDecoration(
-                        labelText: 'Chất liệu vải',
-                        labelStyle: TextStyle(color: wBlack),
-                        filled: true,
-                      ),
-                      cursorColor: wBlack,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Vui lòng nhập chất liệu vải';
-                        }
-                        return null;
-                      },
-                    ),
+                    // TextFormField(
+                    //   controller: chatLieuVaiController,
+                    //   decoration: const InputDecoration(
+                    //     labelText: 'Chất liệu vải',
+                    //     labelStyle: TextStyle(color: wBlack),
+                    //     filled: true,
+                    //   ),
+                    //   cursorColor: wBlack,
+                    //   validator: (value) {
+                    //     if (value == null || value.isEmpty) {
+                    //       return 'Vui lòng nhập chất liệu vải';
+                    //     }
+                    //     return null;
+                    //   },
+                    // ),
                     TextFormField(
                       controller: loaiDoController,
                       decoration: const InputDecoration(

@@ -53,6 +53,7 @@ class HomeBottomBar extends StatelessWidget {
           ),
           InkWell(
             onTap: () {
+              Navigator.pushNamed(context, 'trackingPage');
             },
             child: const Icon(
               Icons.list_alt_rounded,

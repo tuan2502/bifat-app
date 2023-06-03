@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import '../styles/color.dart';
 import '../components/Checkbox.dart';
-import '../components/ServiceAppBar.dart';
 import 'CartPage.dart';
 
 class LaundryServicePage extends StatefulWidget {
@@ -111,13 +110,24 @@ class _LaundryServicePageState extends State<LaundryServicePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Giặt thường',
+          style: TextStyle(
+              color: wBlack,
+              fontSize: 23,
+              fontWeight: FontWeight.bold // Thay đổi màu chữ của tiêu đề
+              ),
+        ),
+        iconTheme: const IconThemeData(
+            color: wBlack, size: 30 // Thay đổi màu của biểu tượng nút Back
+            ),
+        backgroundColor: wPurBlue,
+      ),
       backgroundColor: Colors.white,
       body: ListView(
         shrinkWrap: true,
         children: [
-          const ServiceAppBar(
-            namePage: "Giặt thường",
-          ),
           Padding(
             padding: const EdgeInsets.all(0),
             child: Image.asset(

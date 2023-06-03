@@ -8,9 +8,14 @@ import '../widgets/ServiceWidget.dart';
 import '../widgets/TipsWidget.dart';
 import '../widgets/WebViewWiget.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -132,12 +137,14 @@ class HomePage extends StatelessWidget {
                                   iconSize: 24,
                                   onPressed: () {
                                     //Navigator.pushNamed(context, "cartPage");
+                                    String inputValue = '';
+
                                     showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
                                         return AlertDialog(
                                           title: const Text(
-                                              'Số tiền bạn muốn nạp'),
+                                              'Số tiền bạn muốn nạp'),
                                           content: TextField(
                                             inputFormatters: [
                                               FilteringTextInputFormatter
@@ -167,34 +174,85 @@ class HomePage extends StatelessWidget {
                                                       formattedValue.toString(),
                                                   selection:
                                                       TextSelection.collapsed(
-                                                    offset:
-                                                        formattedValue.length,
-                                                  ),
+                                                          offset: formattedValue
+                                                              .length),
                                                 );
                                               }),
                                             ],
                                             decoration: const InputDecoration(
-                                              labelText: "Số tiền:",
+                                              labelText: 'Số tiền:',
                                               labelStyle: TextStyle(
                                                   color: wBlack, fontSize: 15),
-                                              suffixText:
-                                                  "VNĐ", // Add the "VNĐ" text as suffix
+                                              suffixText: 'VNĐ',
                                               suffixStyle: TextStyle(
                                                   color: wBlack, fontSize: 15),
                                             ),
+                                            onChanged: (value) {
+                                              setState(() {
+                                                inputValue = value;
+                                              });
+                                            },
                                           ),
                                           actions: [
                                             TextButton(
                                               onPressed: () {
                                                 Navigator.of(context).pop();
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          const PaymentWebView()),
-                                                );
                                               },
-                                              child: const Text('OK'),
+                                              child: const Text(
+                                                'Hủy',
+                                                style: TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                            ),
+                                            const SizedBox(width: 120),
+                                            TextButton(
+                                              onPressed: () {
+                                                if (inputValue.isEmpty) {
+                                                  showDialog(
+                                                    context: context,
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return AlertDialog(
+                                                        title: const Text(
+                                                            'Yêu cầu nhập tiền'),
+                                                        actions: [
+                                                          TextButton(
+                                                            onPressed: () {
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop();
+                                                            },
+                                                            child: const Text(
+                                                              'OK',
+                                                              style: TextStyle(
+                                                                  fontSize: 18,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      );
+                                                    },
+                                                  );
+                                                } else {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            const PaymentWebView()),
+                                                  );
+                                                }
+                                              },
+                                              child: const Text(
+                                                'OK',
+                                                style: TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
                                             ),
                                           ],
                                         );
@@ -221,7 +279,54 @@ class HomePage extends StatelessWidget {
                       ),
                     ),
                     const ServiceScreen(),
-                    // Center(
+                    const SizedBox(height: 10),
+                    const Divider(
+                      color: wBlack,
+                      thickness: 0.8,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 15),
+                      child: Text(
+                        'Mẹo vặt',
+                        style: TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                          color: wBlack.withOpacity(0.7),
+                        ),
+                      ),
+                    ),
+                    const TipWidget(),
+                    const Divider(
+                      color: wBlack,
+                      thickness: 0.8,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 15),
+                      child: Text(
+                        'Khuyến Mãi',
+                        style: TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                          color: wBlack.withOpacity(0.7),
+                        ),
+                      ),
+                    ),
+                    const DiscoutWidget(),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: const HomeBottomBar(),
+    );
+  }
+}
+
+
+
+  // Center(
                     //   child: SizedBox(
                     //     height: 150,
                     //     child: ListView.builder(
@@ -280,47 +385,3 @@ class HomePage extends StatelessWidget {
                     //     ),
                     //   ),
                     // ),
-                    const SizedBox(height: 10),
-                    const Divider(
-                      color: wBlack,
-                      thickness: 0.8,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 15),
-                      child: Text(
-                        'Mẹo vặt',
-                        style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
-                          color: wBlack.withOpacity(0.7),
-                        ),
-                      ),
-                    ),
-                    const TipWidget(),
-                    const Divider(
-                      color: wBlack,
-                      thickness: 0.8,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 15),
-                      child: Text(
-                        'Khuyến Mãi',
-                        style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
-                          color: wBlack.withOpacity(0.7),
-                        ),
-                      ),
-                    ),
-                    const DiscoutWidget(),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-      bottomNavigationBar: const HomeBottomBar(),
-    );
-  }
-}

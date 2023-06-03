@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-
 import '../styles/color.dart';
-import '../components/ServiceAppBar.dart';
-import '../widgets/CartItemSample.dart';
+import '../components/SelectPay.dart';
 import '../widgets/OrderWidget.dart';
 
 class CartPage extends StatelessWidget {
@@ -11,11 +9,25 @@ class CartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Giỏ hàng',
+          style: TextStyle(
+              color: wBlack,
+              fontSize: 23,
+              fontWeight: FontWeight.bold // Thay đổi màu chữ của tiêu đề
+              ),
+        ),
+        iconTheme: const IconThemeData(
+            color: wBlack, size: 30 // Thay đổi màu của biểu tượng nút Back
+            ),
+        backgroundColor: wPurBlue,
+      ),
       body: ListView(
         children: [
-          const ServiceAppBar(
-            namePage: 'Cart',
-          ),
+          // const ServiceAppBar(
+          //   namePage: 'Giỏ hàng',
+          // ),
           Container(
             padding: const EdgeInsets.only(top: 10),
             decoration: const BoxDecoration(
@@ -23,7 +35,7 @@ class CartPage extends StatelessWidget {
             ),
             child: Column(
               children: [
-                const CartItemSamples(),
+                //const CartItemSamples(),
                 Container(
                   margin:
                       const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
@@ -45,7 +57,33 @@ class CartPage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: const [
                           Text(
-                            "Sub-Total",
+                            "Tên dịch vụ: ",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: wBlack,
+                            ),
+                          ),
+                          Text(
+                            "Giặt Combo 1",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: wBlack,
+                            ),
+                          )
+                        ],
+                      ),
+                      const Divider(
+                        height: 30,
+                        thickness: 0.8,
+                        color: Color(0xFF475269),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: const [
+                          Text(
+                            "Số kilogam: ",
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -53,7 +91,7 @@ class CartPage extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            "\$100",
+                            "0",
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -71,7 +109,7 @@ class CartPage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: const [
                           Text(
-                            "Delivery Fee:",
+                            "Tiền dịch vụ:",
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -79,7 +117,59 @@ class CartPage extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            "\$20",
+                            "179.000",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF475269),
+                            ),
+                          )
+                        ],
+                      ),
+                      const Divider(
+                        height: 30,
+                        thickness: 0.8,
+                        color: Color(0xFF475269),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: const [
+                          Text(
+                            "Shipping:",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF475269),
+                            ),
+                          ),
+                          Text(
+                            "30.000",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF475269),
+                            ),
+                          )
+                        ],
+                      ),
+                      const Divider(
+                        height: 30,
+                        thickness: 0.8,
+                        color: Color(0xFF475269),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: const [
+                          Text(
+                            "Giặt nhanh:",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF475269),
+                            ),
+                          ),
+                          Text(
+                            "0",
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -105,7 +195,7 @@ class CartPage extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            "-\$10",
+                            "-10.000",
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -123,7 +213,7 @@ class CartPage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: const [
                           Text(
-                            "Total",
+                            "Tổng:",
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -131,7 +221,7 @@ class CartPage extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            "\$100",
+                            "199.000",
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -143,6 +233,8 @@ class CartPage extends StatelessWidget {
                     ],
                   ),
                 ),
+                const PaymentOptions(),
+                const SizedBox(height: 0),
                 const OrderScreen(),
                 //const ServiceBottomBar(),
               ],
