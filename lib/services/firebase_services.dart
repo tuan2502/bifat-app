@@ -1,5 +1,9 @@
 // import 'dart:ffi';
+import 'dart:convert';
+import 'package:bifat_app/services/utils/api_endpoint.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:http/http.dart' as http;
 import 'package:bifat_app/pages/HomePage.dart';
 import 'package:bifat_app/pages/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,10 +11,9 @@ import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-class FirebaseServices {
-  final _auth = FirebaseAuth.instance;
-  final _googleSignIn = GoogleSignIn();
+import '../core/helpers/local_storage_helper.dart';
 
+class FirebaseServices {
   handleAuthState() {
     return StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
@@ -24,110 +27,93 @@ class FirebaseServices {
         });
   }
 
-  Future <void> signInWithGoogle() async {
+  // Future<void> signInWithGoogle() async {
+  //   try {
+  //     final GoogleSignInAccount? googleSignInAccount =
+  //         await _googleSignIn.signIn();
+  //     if (googleSignInAccount != null) {
+  //       final GoogleSignInAuthentication googleSignInAuthentication =
+  //           await googleSignInAccount.authentication;
+  //       final AuthCredential authCredential = GoogleAuthProvider.credential(
+  //           accessToken: googleSignInAuthentication.accessToken,
+  //           idToken: googleSignInAuthentication.idToken);
+  //       await _auth.signInWithCredential(authCredential);
+  //       var responseServer = await _auth.signInWithCredential(authCredential);
+  //       print("Token: ${await responseServer.user?.getIdToken()}");
+  //       //print("Token: ${googleSignInAuthentication.idToken}");
+  //     }
+  //   } on FirebaseAuthException catch (e) {
+  //     print(e.message);
+  //     throw e;
+  //   }
+  // }
+  final _auth = FirebaseAuth.instance;
+  final _googleSignIn = GoogleSignIn();
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  signInWithGoogle() async {
     try {
-      final GoogleSignInAccount? googleSignInAccount = await _googleSignIn.signIn();
+      googleSignOut();
+      final GoogleSignInAccount? googleSignInAccount =
+          await _googleSignIn.signIn();
       if (googleSignInAccount != null) {
-
-        final GoogleSignInAuthentication googleAuth = await googleSignInAccount.authentication;
-
+        final GoogleSignInAuthentication googleSignInAuthentication =
+            await googleSignInAccount.authentication;
         final AuthCredential authCredential = GoogleAuthProvider.credential(
-            accessToken: googleAuth.accessToken,
-            idToken: googleAuth.idToken);
-        // await googleSignInAccount.reAuthCredential(credential);
-
-        // var responseServer = await _auth.signInWithCredential(authCredential);
-        // await _auth.signInWithCredential(authCredential);
-        print("acccess-Token: ${googleAuth.accessToken}");
-        // print("idToken: ${googleAuth.idToken}");
-        // print("auth: ${await responseServer.user?.getIdToken()}");
-
-
-
-        makeAuthServer(googleAuth.idToken.toString());
-        // makeAuthenticatedRequest(googleAuth.idToken.toString());
+            accessToken: googleSignInAuthentication.accessToken,
+            idToken: googleSignInAuthentication.idToken);
+        var responseServer = await _auth.signInWithCredential(authCredential);
+        print(await responseServer.user?.getIdToken());
+        //https://hqtbe.site/api/v1/oauth2/public/login?idToken=${await response.user?.getIdToken()}
+        final response = await http.get(Uri.parse(
+            'https://bifatlaundrybe.online/api/v1/oauth2/public/login?idToken=${await responseServer.user?.getIdToken()}'));
+        if (response.statusCode == 202) {
+          final json = jsonDecode(response.body);
+          print("Heloo $json");
+          var accessToken = json['data']['accessToken'];
+          var refreshToken = json['data']['refreshToken'];
+          final SharedPreferences? prefs = await _prefs;
+          await prefs?.setString('accessToken', accessToken);
+          await prefs?.setString('refreshToken', refreshToken);
+          LocalStorageHelper.setValue('accessToken', accessToken);
+          LocalStorageHelper.setValue('refreshToken', refreshToken);
+          //String fcmToken = LocalStorageHelper.getValue('fcmToken');
+          //savingFCMToken(fcmToken);
+          return true;
+        } else {
+          return false;
+        }
       }
     } on FirebaseAuthException catch (e) {
-      print(e.message);
+      print(e);
       throw e;
     }
   }
 
-  final FirebaseAuth auth = FirebaseAuth.instance;
-  Future<void> saveAccessToken(String token, String refreshToken) async {
-    // Save the token to storage using your preferred storage mechanism
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('access_token', token);
-    await prefs.setString('refresh_token', refreshToken);
-  }
+// save fcm when user login
+  void savingFCMToken(String fcmToken) async {
+    try {
+      String token = LocalStorageHelper.getValue('accessToken');
+      var header = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      };
 
-  Future<String?> getAccessToken() async {
-    final GoogleSignInAccount? googleUser =
-        await GoogleSignIn(scopes: <String>["email"]).signIn();
-
-    // Obtain the auth details from the request
-    final GoogleSignInAuthentication googleAuth =
-        await googleUser!.authentication;
-
-    return googleAuth.idToken;
-
-  }
-
-  Future<Map<String, String>> readTokens() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    final accessToken = prefs.getString('access_token') ?? '';
-    final refreshToken = prefs.getString('refresh_token') ?? '';
-
-    return {'access_token': accessToken, 'refresh_token': refreshToken};
+      Map body = {"token": fcmToken};
+      var url = Uri.parse(
+          ApiEndPoints.baseUrl + ApiEndPoints.authEngponts.savingFCMToken);
+      http.Response response =
+          await http.post(url, body: jsonEncode(body), headers: header);
+      print(jsonDecode(response.body));
+      if (response.statusCode == 200) {
+        print('Saving FCM token success');
+      }
+    } catch (e) {}
+    return null;
   }
 
   signOut() async {
-    final GoogleSignIn googleSignIn = GoogleSignIn();
-    await googleSignIn.disconnect();
-    FirebaseAuth.instance.signOut();
-  }
-
-  Future<String> makeAuthServer(String idToken) async {
-    final String? idToken = await getAccessToken();
-    if (idToken != null) {
-      print("idToken: ${idToken}");
-      final response = await http.post(
-        Uri.parse("https://bifatlaundrybe.online/api/v1/oauth2/public/login?idToken=${idToken}"),
-        headers: {
-          'Authorization': 'Bearer $idToken',
-        },
-      );
-      if (response.statusCode == 200) {
-        print("success");
-        print("${response.body}");
-        return response.body;
-      } else {
-        throw Exception('Failed to fetch data');
-      }
-    } else {
-      throw Exception('Access token not found');
-    }
-  }
-
-  // Make an authenticated API request
-  Future<String> makeAuthenticatedRequest(String idToken) async {
-    final String? idToken = await getAccessToken();
-    if (idToken != null) {
-      final response = await http.get(
-        Uri.parse('https://lacha.s2tek.net/swagger/index.html'),
-        headers: {
-          'Authorization': 'Bearer $idToken',
-        },
-      );
-      if (response.statusCode == 200) {
-        print('Success!!!');
-        return response.body;
-      } else {
-        throw Exception('Failed to fetch data');
-      }
-    } else {
-      throw Exception('Access token not found');
-    }
+    await _auth.signOut();
+    await _googleSignIn.signOut();
   }
 }
