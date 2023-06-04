@@ -1,0 +1,1 @@
+const String BASE_URL = "https://bifatlaundrybe.online/api/v1";

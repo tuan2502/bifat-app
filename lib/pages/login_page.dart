@@ -1,7 +1,7 @@
 import 'package:bifat_app/pages/HomePage.dart';
 import 'package:bifat_app/services/firebase_services.dart';
 import 'package:flutter/material.dart';
-import '../styles/images.dart';
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -11,6 +11,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,13 +27,13 @@ class _LoginPageState extends State<LoginPage> {
                       //Logo Bifat
                       child: Transform.scale(
                         scale: 1.5,
-                        child: Image(
+                        child: const Image(
                           image: AssetImage('assets/images/logo-2.png'),
                           width: 150,
                         ),
                       )),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
 
                 //username
                 Padding(
@@ -43,8 +44,8 @@ class _LoginPageState extends State<LoginPage> {
                       border: Border.all(color: Colors.white),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 20.0),
+                    child: const Padding(
+                      padding: EdgeInsets.only(left: 20.0),
                       child: TextField(
                         decoration: InputDecoration(
                             border: InputBorder.none, hintText: 'Email'),
@@ -52,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 //password
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -62,8 +63,8 @@ class _LoginPageState extends State<LoginPage> {
                       border: Border.all(color: Colors.white),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 20.0),
+                    child: const Padding(
+                      padding: EdgeInsets.only(left: 20.0),
                       child: TextField(
                         obscureText: true,
                         decoration: InputDecoration(
@@ -74,25 +75,25 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
 
                 //Login button
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: Container(
-                    padding: EdgeInsets.all(15),
+                    padding: const EdgeInsets.all(15),
                     decoration: BoxDecoration(
-                        color: Color.fromRGBO(96, 93, 236, 1),
+                        color: const Color.fromRGBO(96, 93, 236, 1),
                         borderRadius: BorderRadius.circular(12)),
                     child: Center(
                       child: TextButton(
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => HomePage()),
+                            MaterialPageRoute(builder: (context) => const HomePage()),
                           );
                         },
-                        child: Text(
+                        child: const Text(
                           'Đăng nhập',
                           style: TextStyle(
                               color: Colors.white,
@@ -103,7 +104,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 //Forgotten password?
                 Align(
                   alignment: Alignment.centerLeft,
@@ -113,7 +114,7 @@ class _LoginPageState extends State<LoginPage> {
                           onPressed: () {
                             //handle something
                           },
-                          child: Text(
+                          child: const Text(
                             'Quên mật khẩu?',
                             style: TextStyle(
                               color: Colors.black54,
@@ -136,7 +137,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        padding: EdgeInsets.symmetric(horizontal: 10),
                         child: Text("OR",
                             style: TextStyle(
                               color: Color.fromARGB(255, 190, 186, 186),

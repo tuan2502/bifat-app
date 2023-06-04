@@ -119,6 +119,14 @@ class _LaundryServicePageState extends State<LaundryServicePage> {
               fontWeight: FontWeight.bold // Thay đổi màu chữ của tiêu đề
               ),
         ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            // Hàm xử lý sự kiện khi người dùng bấm nút back
+            // Ví dụ:
+            Navigator.of(context).pop();
+          },
+        ),
         iconTheme: const IconThemeData(
             color: wBlack, size: 30 // Thay đổi màu của biểu tượng nút Back
             ),

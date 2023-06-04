@@ -9,8 +9,6 @@ import 'package:bifat_app/pages/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 import '../core/helpers/local_storage_helper.dart';
 
 class FirebaseServices {
@@ -50,9 +48,10 @@ class FirebaseServices {
   final _auth = FirebaseAuth.instance;
   final _googleSignIn = GoogleSignIn();
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
   signInWithGoogle() async {
     try {
-      googleSignOut();
+      signOut();
       final GoogleSignInAccount? googleSignInAccount =
           await _googleSignIn.signIn();
       if (googleSignInAccount != null) {
@@ -62,22 +61,23 @@ class FirebaseServices {
             accessToken: googleSignInAuthentication.accessToken,
             idToken: googleSignInAuthentication.idToken);
         var responseServer = await _auth.signInWithCredential(authCredential);
-        print(await responseServer.user?.getIdToken());
+        // print(await responseServer.user?.getIdToken());
         //https://hqtbe.site/api/v1/oauth2/public/login?idToken=${await response.user?.getIdToken()}
-        final response = await http.get(Uri.parse(
-            'https://bifatlaundrybe.online/api/v1/oauth2/public/login?idToken=${await responseServer.user?.getIdToken()}'));
+        final String? idToken =  await responseServer.user?.getIdToken();
+        final response = await http.get(
+          Uri.parse(
+          'https://bifatlaundrybe.online/api/v1/oauth2/public/login?idToken=${idToken}'),
+        );
         if (response.statusCode == 202) {
           final json = jsonDecode(response.body);
-          print("Heloo $json");
+          // print("Heloo $json");
           var accessToken = json['data']['accessToken'];
           var refreshToken = json['data']['refreshToken'];
           final SharedPreferences? prefs = await _prefs;
-          await prefs?.setString('accessToken', accessToken);
+          var token = await prefs?.setString('accessToken', accessToken);
           await prefs?.setString('refreshToken', refreshToken);
           LocalStorageHelper.setValue('accessToken', accessToken);
           LocalStorageHelper.setValue('refreshToken', refreshToken);
-          //String fcmToken = LocalStorageHelper.getValue('fcmToken');
-          //savingFCMToken(fcmToken);
           return true;
         } else {
           return false;
@@ -88,6 +88,7 @@ class FirebaseServices {
       throw e;
     }
   }
+
 
 // save fcm when user login
   void savingFCMToken(String fcmToken) async {
@@ -115,5 +116,11 @@ class FirebaseServices {
   signOut() async {
     await _auth.signOut();
     await _googleSignIn.signOut();
+  }
+
+  static getAccessToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('accessToken');
+    return token;
   }
 }

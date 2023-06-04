@@ -1,5 +1,9 @@
+import 'dart:convert';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 
 import '../styles/color.dart';
 import '../widgets/DiscountWidget.dart';
@@ -8,6 +12,8 @@ import '../widgets/ServiceWidget.dart';
 import '../widgets/TipsWidget.dart';
 import '../widgets/WebViewWiget.dart';
 
+
+// String stringResponse;
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -16,6 +22,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,10 +65,10 @@ class _HomePageState extends State<HomePage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const CircleAvatar(
+                              CircleAvatar(
                                 radius: 20,
-                                backgroundImage:
-                                    AssetImage('assets/images/Janet.png'),
+                                backgroundImage: NetworkImage(FirebaseAuth
+                                    .instance.currentUser!.photoURL!),
                               ),
                               IconButton(
                                 icon: const Icon(Icons.notifications),
@@ -81,8 +89,8 @@ class _HomePageState extends State<HomePage> {
                                 fontWeight: FontWeight.w500),
                           ),
                           const SizedBox(height: 5),
-                          const Text(
-                            "Nguyễn Thiện Thức",
+                          Text(
+                            "${FirebaseAuth.instance.currentUser!.displayName}",
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 20,
@@ -278,7 +286,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
-                    const ServiceScreen(),
+                    const ServiceWidget(),
                     const SizedBox(height: 10),
                     const Divider(
                       color: wBlack,
@@ -319,69 +327,8 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
+      // floatingActionButton: FloatingActionButton(onPressed: fetchService),
       bottomNavigationBar: const HomeBottomBar(),
     );
   }
 }
-
-
-
-  // Center(
-                    //   child: SizedBox(
-                    //     height: 150,
-                    //     child: ListView.builder(
-                    //       shrinkWrap: true,
-                    //       scrollDirection: Axis.horizontal,
-                    //       itemCount: catNames.length,
-                    //       itemBuilder: (context, index) {
-                    //         return Column(
-                    //           children: [
-                    //             Container(
-                    //               margin: const EdgeInsets.symmetric(
-                    //                   vertical: 1, horizontal: 15),
-                    //               child: SizedBox(
-                    //                 width: 100, // Adjust the width as desired
-                    //                 child: InkWell(
-                    //                   onTap: () {
-                    //                     // Add your onTap logic here
-                    //                   },
-                    //                   child: SizedBox(
-                    //                     // decoration: BoxDecoration(
-                    //                     //   color: const Color(0xFFF2F8FF),
-                    //                     //   borderRadius:
-                    //                     //       BorderRadius.circular(50),
-                    //                     //   boxShadow: const [
-                    //                     //     BoxShadow(
-                    //                     //       color: wBlack,
-                    //                     //       blurRadius: 4,
-                    //                     //       spreadRadius: 1,
-                    //                     //     ),
-                    //                     //   ],
-                    //                     // ),
-                    //                     width: 100,
-                    //                     height: 100,
-                    //                     child: ClipRect(
-                    //                       child: catImg[index],
-                    //                     ),
-                    //                   ),
-                    //                 ),
-                    //               ),
-                    //             ),
-                    //             const SizedBox(height: 10),
-                    //             Center(
-                    //               //padding: const EdgeInsets.only(left: 15),
-                    //               child: Text(
-                    //                 catNames[index],
-                    //                 style: TextStyle(
-                    //                   fontSize: 16,
-                    //                   fontWeight: FontWeight.w400,
-                    //                   color: wBlack.withOpacity(0.7),
-                    //                 ),
-                    //               ),
-                    //             ),
-                    //           ],
-                    //         );
-                    //       },
-                    //     ),
-                    //   ),
-                    // ),

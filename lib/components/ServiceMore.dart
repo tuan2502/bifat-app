@@ -35,7 +35,7 @@ class ServiceMore extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
               image: DecorationImage(
-                image: AssetImage(imgPath),
+                image: NetworkImage(imgPath),
                 fit: BoxFit.cover,
               ),
               boxShadow: const [
@@ -58,16 +58,6 @@ class ServiceMore extends StatelessWidget {
               ),
             ),
           ),
-          // Padding(
-          //   padding: const EdgeInsets.only(top: 5, left: 10),
-          //   child: Text(
-          //     descriptionService,
-          //     style: const TextStyle(
-          //       fontSize: 16,
-          //       color: Colors.black,
-          //     ),
-          //   ),
-          // ),
         ],
       ),
     );
