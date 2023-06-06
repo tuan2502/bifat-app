@@ -1,7 +1,11 @@
 import 'dart:async';
 
 import 'package:bifat_app/components/Checkbox.dart';
+import 'package:bifat_app/models/service_detail_model.dart';
+import 'package:bifat_app/services/service_api.dart';
+import 'package:bifat_app/widgets/FormatValue.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../styles/color.dart';
 import 'CartPage.dart';
 
@@ -13,6 +17,8 @@ class LaundryCombo1Page extends StatefulWidget {
 }
 
 class _LaundryCombo1PageState extends State<LaundryCombo1Page> {
+  List<ServiceDetailModel> service = [];
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController kilogramController = TextEditingController();
   final TextEditingController chatLieuVaiController = TextEditingController();
@@ -28,7 +34,7 @@ class _LaundryCombo1PageState extends State<LaundryCombo1Page> {
   @override
   void initState() {
     super.initState();
-    // Start the animation
+    fetchServices();
     startAnimation();
   }
 
@@ -111,6 +117,7 @@ class _LaundryCombo1PageState extends State<LaundryCombo1Page> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+      // for (var s in service)
         title: const Text(
           'Giặt Combo 1',
           style: TextStyle(
@@ -128,10 +135,11 @@ class _LaundryCombo1PageState extends State<LaundryCombo1Page> {
       body: ListView(
         shrinkWrap: true,
         children: [
+          for (var service in service)
           Padding(
             padding: const EdgeInsets.all(0),
-            child: Image.asset(
-              "assets/images/bifat (7).png",
+            child: Image.network(
+              service.image_url.toString(),
               height: 270,
             ),
           ),
@@ -143,9 +151,10 @@ class _LaundryCombo1PageState extends State<LaundryCombo1Page> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      'Giặt Combo 1',
-                      style: TextStyle(
+                    for (var service in service)
+                    Text(
+                      '${service.name}',
+                      style: const TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.w500,
                       ),
@@ -179,9 +188,10 @@ class _LaundryCombo1PageState extends State<LaundryCombo1Page> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      '179.000 VNĐ',
-                      style: TextStyle(
+                  for (var service in service)
+                     Text(
+                      '${FormatValue.formatMoney(service.price).toString()}',
+                      style: const TextStyle(
                         color: wBlue,
                         fontSize: 22,
                         fontWeight: FontWeight.w500,
@@ -474,13 +484,14 @@ class _LaundryCombo1PageState extends State<LaundryCombo1Page> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  "179.000",
-                  style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
+                for (var service in service)
+                  Text(
+                    '${FormatValue.formatMoney(service.price).toString()}',
+                    style: const TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
@@ -551,5 +562,13 @@ class _LaundryCombo1PageState extends State<LaundryCombo1Page> {
         ],
       ),
     );
+  }
+
+  Future<void> fetchServices() async {
+    final response = await ServiceApi.fetchServiceById();
+    setState(() {
+      service = response;
+      print('service: $service');
+    });
   }
 }

@@ -66,6 +66,7 @@ dependencies:
   material_design_icons_flutter: ^6.0.7096
   flutter_rating_bar: ^4.0.1
   webview_flutter: ^2.0.14
+  intl: ^0.18.1
   
 
 dev_dependencies:

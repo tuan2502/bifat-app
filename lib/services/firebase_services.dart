@@ -74,7 +74,7 @@ class FirebaseServices {
           var accessToken = json['data']['accessToken'];
           var refreshToken = json['data']['refreshToken'];
           final SharedPreferences? prefs = await _prefs;
-          var token = await prefs?.setString('accessToken', accessToken);
+          await prefs?.setString('accessToken', accessToken);
           await prefs?.setString('refreshToken', refreshToken);
           LocalStorageHelper.setValue('accessToken', accessToken);
           LocalStorageHelper.setValue('refreshToken', refreshToken);
@@ -121,6 +121,14 @@ class FirebaseServices {
   static getAccessToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('accessToken');
+    print('token: $token');
     return token;
+  }
+
+  static getServiceId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var serviceId = prefs.getString('serviceId');
+    print('serviceId: $serviceId');
+    return serviceId;
   }
 }

@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import '../styles/color.dart';
 import '../components/Checkbox.dart';

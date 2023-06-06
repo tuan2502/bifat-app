@@ -34,14 +34,14 @@ class MyApp extends StatelessWidget {
         'homePage': (context) => const HomePage(),
         'combo1Page': (context) => const LaundryCombo1Page(),
         'combo2Page': (context) => const LaundryCombo2Page(),
-        'laundryPage': (context) => const LaundryServicePage(),
+        'laundryPage': (context) => const LaundryCombo1Page(),
         'combo1': (context) => const Combo1(),
         'servicePage': (context) => const ServiceDetailPage(
             imgUrl: "assets/images/bifat (2).png",
             serviceName: "serviceName",
             price: 2,
             quantity: 1,
-            description: "escription"),
+            description: "description"),
         'trackingPage': (context) => TrackingPage(),
         'cartPage': (context) => const CartPage(),
         'profilePage': (context) => const ProfilePage()
