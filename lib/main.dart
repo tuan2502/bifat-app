@@ -5,7 +5,6 @@ import 'package:bifat_app/pages/HomePage.dart';
 import 'package:bifat_app/pages/LaundryCombo1Page.dart';
 import 'package:bifat_app/pages/LaundryCombo2Page.dart';
 import 'package:bifat_app/pages/TrackingPage.dart';
-import 'package:bifat_app/pages/LaundryServicePage.dart';
 import 'package:bifat_app/pages/login_page.dart';
 import 'package:bifat_app/pages/profile_page.dart';
 import 'package:firebase_core/firebase_core.dart';

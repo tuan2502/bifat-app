@@ -1,9 +1,7 @@
-import 'dart:convert';
-
+import 'package:bifat_app/services/api_notification.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 
 import '../styles/color.dart';
 import '../widgets/DiscountWidget.dart';
@@ -11,7 +9,6 @@ import '../widgets/HomeBottomBar.dart';
 import '../widgets/ServiceWidget.dart';
 import '../widgets/TipsWidget.dart';
 import '../widgets/WebViewWiget.dart';
-
 
 // String stringResponse;
 class HomePage extends StatefulWidget {
@@ -22,7 +19,21 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  ApiNotification apiNotification = ApiNotification();
 
+  @override
+  void initState() {
+    super.initState();
+    apiNotification.initializeNotifications();
+  }
+
+  Future<void> fetchNotificationData() async {
+    await apiNotification.showNotification("Hủy", "Thành công");
+  }
+
+  void fetchNotificationData1() async {
+    await apiNotification.showNotification("Nhập đi", "Đỉ");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +102,7 @@ class _HomePageState extends State<HomePage> {
                           const SizedBox(height: 5),
                           Text(
                             "${FirebaseAuth.instance.currentUser!.displayName}",
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 20,
                               fontWeight: FontWeight.w500,
@@ -205,6 +216,7 @@ class _HomePageState extends State<HomePage> {
                                             TextButton(
                                               onPressed: () {
                                                 Navigator.of(context).pop();
+                                                fetchNotificationData();
                                               },
                                               child: const Text(
                                                 'Hủy',
@@ -228,6 +240,7 @@ class _HomePageState extends State<HomePage> {
                                                         actions: [
                                                           TextButton(
                                                             onPressed: () {
+                                                              fetchNotificationData1();
                                                               Navigator.of(
                                                                       context)
                                                                   .pop();

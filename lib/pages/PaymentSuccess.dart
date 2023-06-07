@@ -68,7 +68,7 @@ class PaymentSuccessPage extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 // TODO: Xử lý khi nhấn nút 'Theo dõi đơn hàng'
-                //Navigator.pushNamed(context, 'followOrder');
+                Navigator.pushNamed(context, 'trackingPage');
               },
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(wPurBlue),
