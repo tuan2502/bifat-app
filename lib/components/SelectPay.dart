@@ -38,14 +38,14 @@ class _PaymentOptionsState extends State<PaymentOptions> {
               builder: (BuildContext context) {
                 return AlertDialog(
                   content: SizedBox(
-                    width: 300,
-                    height: 300,
+                    width: 320,
+                    height: 320,
                     child: Stack(
                       alignment: Alignment.center,
                       children: [
                         Image.asset("assets/images/Banking.png"),
                         const Positioned(
-                          bottom: 250,
+                          bottom: 260,
                           child: Text(
                             'MÃ: 190037282',
                             style: TextStyle(
@@ -55,8 +55,17 @@ class _PaymentOptionsState extends State<PaymentOptions> {
                             ),
                           ),
                         ),
-                        const SizedBox(
-                          height: 20,
+                        const Positioned(
+                          top: 300,
+                          //bottom: 5,
+                          child: Text(
+                            '* Nội dung CK: Ten KH + Ten dich vu ',
+                            style: TextStyle(
+                              color: wBlack,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                       ],
                     ),

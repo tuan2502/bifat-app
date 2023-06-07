@@ -21,8 +21,8 @@ class OrderScreen extends StatelessWidget {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: const Text('Error'),
-            content: const Text('Please fill in all fields.'),
+            title: const Text('Lỗi!!'),
+            content: const Text('Hãy nhập đầy đủ nhé bạn.'),
             actions: [
               TextButton(
                 onPressed: () {
@@ -36,9 +36,6 @@ class OrderScreen extends StatelessWidget {
       );
       return; // Kết thúc hàm submitOrder nếu dữ liệu không hợp lệ
     }
-
-    // Thực hiện gửi dữ liệu lên server, lưu trữ, vv. ở đây
-    // ...
   }
 
   @override
@@ -51,11 +48,9 @@ class OrderScreen extends StatelessWidget {
           margin: const EdgeInsets.only(left: 15, top: 30),
           alignment: Alignment.centerLeft,
           child: const Text(
-            "Fill Order Details",
+            "Thông tin giao hàng",
             style: TextStyle(
-              fontSize: 22,
-              color: Color(0xFF475269),
-            ),
+                fontSize: 22, color: wBlack, fontWeight: FontWeight.w500),
           ),
         ),
         // Container(
@@ -85,11 +80,12 @@ class OrderScreen extends StatelessWidget {
           width: 370,
           child: TextFormField(
             decoration: const InputDecoration(
-                border: InputBorder.none,
-                hintText: "Số điện thoại",
-                hintStyle: TextStyle(
-                  fontSize: 20,
-                )),
+              border: InputBorder.none,
+              hintText: "Số điện thoại",
+              hintStyle: TextStyle(
+                fontSize: 20,
+              ),
+            ),
           ),
         ),
         Container(
@@ -102,11 +98,12 @@ class OrderScreen extends StatelessWidget {
           width: 370,
           child: TextFormField(
             decoration: const InputDecoration(
-                border: InputBorder.none,
-                hintText: "Địa chỉ",
-                hintStyle: TextStyle(
-                  fontSize: 20,
-                )),
+              border: InputBorder.none,
+              hintText: "Địa chỉ",
+              hintStyle: TextStyle(
+                fontSize: 20,
+              ),
+            ),
           ),
         ),
         const SizedBox(height: 30),
