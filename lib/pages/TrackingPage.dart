@@ -1,3 +1,4 @@
+import 'package:bifat_app/components/Tracking.dart';
 import 'package:flutter/material.dart';
 
 import '../styles/color.dart';
@@ -9,69 +10,61 @@ class TrackingStep {
   TrackingStep({required this.title, required this.description});
 }
 
-class TrackingPage extends StatelessWidget {
-  final List<TrackingStep> trackingSteps = [
-    TrackingStep(
-      title: 'Đã đặt hàng',
-      description: 'Đơn hàng của bạn đã được đặt thành công.',
-    ),
-    TrackingStep(
-      title: 'Đang vận chuyển',
-      description:
-          'Đơn hàng của bạn đang được vận chuyển đến địa chỉ giao hàng.',
-    ),
-    TrackingStep(
-      title: 'Đã giao hàng',
-      description: 'Đơn hàng của bạn đã được giao thành công.',
-    ),
-  ];
+class TrackingPage extends StatefulWidget {
+  const TrackingPage({Key? key}) : super(key: key);
 
-  TrackingPage({super.key});
+  @override
+  _TrackingPageState createState() => _TrackingPageState();
+}
+
+class _TrackingPageState extends State<TrackingPage> {
+  bool isSuccess = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Theo dõi đơn hàng'),
+        title: const Text(
+          'Theo dõi đơn hàng',
+          style: TextStyle(
+              color: wBlack,
+              fontSize: 23,
+              fontWeight: FontWeight.bold // Thay đổi màu chữ của tiêu đề
+              ),
+        ),
+        iconTheme: const IconThemeData(
+            color: wBlack, size: 30 // Thay đổi màu của biểu tượng nút Back
+            ),
         backgroundColor: wPurBlue,
       ),
-      body: ListView.builder(
-        itemCount: trackingSteps.length,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    trackingSteps[index].title,
-                    style: const TextStyle(
-                      fontSize: 23,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    trackingSteps[index].description,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.red,
-                    ),
-                  ),
-                  if (index != trackingSteps.length - 1) ...[
-                    const SizedBox(height: 16),
-                    const Divider(
-                      thickness: 1,
-                      color: wBlack,
-                      height: 24,
-                    ),
-                  ],
-                ],
-              ),
+      body: ListView(
+        children: [
+          InkWell(
+            onTap: () {
+              setState(() {
+                isSuccess = true;
+              });
+            },
+            child: Tracking(
+              title: "Đã đặt hàng",
+              description: isSuccess ? "Thành công" : "Đơn đang được xử lý",
             ),
-          );
-        },
+          ),
+          // InkWell(
+          //   onTap: () {},
+          //   child: const Tracking(
+          //     title: "Đang xử lý",
+          //     description: "description",
+          //   ),
+          // ),
+          // InkWell(
+          //   onTap: () {},
+          //   child: const Tracking(
+          //     title: "db",
+          //     description: "description",
+          //   ),
+          // ),
+        ],
       ),
       floatingActionButton: ElevatedButton(
         onPressed: () {

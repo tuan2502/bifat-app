@@ -1,6 +1,6 @@
+import 'package:bifat_app/components/QRcode.dart';
 import 'package:flutter/material.dart';
 import '../styles/color.dart';
-import '../pages/PaymentSuccess.dart';
 
 class OrderScreen extends StatelessWidget {
   const OrderScreen({super.key});
@@ -148,8 +148,8 @@ class OrderScreen extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      const PaymentSuccessPage()),
+                                  builder: (context) => const QRcode(
+                                      imgPath: "assets/images/qr-tuan.jpg")),
                             );
                           },
                           child: const Text(

@@ -143,7 +143,7 @@ class CartPage extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            "30.000",
+                            "0",
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -195,7 +195,7 @@ class CartPage extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            "-10.000",
+                            "",
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -221,7 +221,7 @@ class CartPage extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            "199.000",
+                            "179.000",
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
