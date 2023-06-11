@@ -1,30 +1,28 @@
-
 import 'package:flutter/material.dart';
 
-class ServiceDetailModel with ChangeNotifier{
+class ServiceDetailModel with ChangeNotifier {
   final String? id;
   final String? name;
   final double? price;
   final int? quantity;
   final String? decoration;
   final String? image_url;
-  
-  ServiceDetailModel({
-      required this.id,
+
+  ServiceDetailModel(
+      {required this.id,
       required this.name,
       required this.price,
       required this.quantity,
       required this.decoration,
-      required this.image_url
-  });
-  
+      required this.image_url});
+
   factory ServiceDetailModel.fromJson(Map<String, dynamic> json) {
     final id = json["id"];
     final name = json["name"];
     final price = json["price"];
     final quantity = json["quantity"];
     final decoration = json["decoration"];
-    final image_url = json["image_url"];
+    final imageUrl = json["image_url"];
     return ServiceDetailModel(
       id: json["id"],
       name: json["name"],

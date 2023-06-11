@@ -16,7 +16,22 @@ class TipWidget extends StatelessWidget {
         InkWell(
           onTap: () {
             // Xử lý khi người dùng nhấp vào ServiceMore 1
-            Navigator.pushNamed(context, 'itemPage');
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) => DiscountPageDemo(
+            //       code: 'ABC123',
+            //       price: 10.99,
+            //       description: 'Discount Description',
+            //       startDate: DateTime(2023, 1, 1),
+            //       endDate: DateTime(2023, 1, 31),
+            //       postDate: DateTime.now(),
+            //       name: 'Discount Name',
+            //       quantity: 100,
+            //       imageUrl: '',
+            //     ),
+            //   ),
+            // );
           },
           child: const Tips(
             imgPath: 'assets/images/tip (1).png',

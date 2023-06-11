@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../pages/DiscountDetailPage.dart';
 import '../styles/color.dart';
 
 class HomeBottomBar extends StatelessWidget {
@@ -43,7 +44,22 @@ class HomeBottomBar extends StatelessWidget {
           ),
           InkWell(
             onTap: () {
-              //..
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DiscountDetailPage(
+                    code: 'ABC123',
+                    price: 10.99,
+                    description: 'Discount Description',
+                    startDate: DateTime(2023, 1, 1),
+                    endDate: DateTime(2023, 1, 31),
+                    postDate: DateTime.now(),
+                    name: 'Discount Name',
+                    quantity: 100,
+                    imageUrl: 'assets/images/giatthuong.jpg',
+                  ),
+                ),
+              );
             },
             child: const Icon(
               Icons.chat_bubble_outline,

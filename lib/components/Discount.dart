@@ -1,9 +1,11 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../styles/color.dart';
 
-class Tips extends StatelessWidget {
-  const Tips({
+class Discount extends StatelessWidget {
+  const Discount({
     Key? key,
     required this.imgPath,
     required this.nameService,
@@ -38,7 +40,7 @@ class Tips extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               image: DecorationImage(
-                image: AssetImage(imgPath),
+                image: NetworkImage(imgPath),
                 fit: BoxFit.cover,
               ),
               boxShadow: const [
@@ -50,11 +52,13 @@ class Tips extends StatelessWidget {
               ],
             ),
           ),
+
           Padding(
-            padding: const EdgeInsets.only(top: 15, left: 10),
+            padding: const EdgeInsets.only(top: 10, left: 5),
             child: Text(
-              nameService,
-              style: const TextStyle(
+              utf8.decode(nameService.runes.toList()),
+              style: GoogleFonts.getFont(
+                'Noto Sans',
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
@@ -62,6 +66,7 @@ class Tips extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
           ),
+
           // Padding(
           //   padding: const EdgeInsets.only(top: 5, left: 10),
           //   child: Text(
@@ -74,42 +79,6 @@ class Tips extends StatelessWidget {
           // ),
         ],
       ),
-      // child: Column(
-      //   children: [
-      //     Container(
-      //       margin: const EdgeInsets.all(10),
-      //       child: Image.asset(
-      //         imgPath,
-      //         height: 120,
-      //         width: 150,
-      //       ),
-      //     ),
-      //     Padding(
-      //       padding: const EdgeInsets.only(bottom: 8),
-      //       child: Container(
-      //         alignment: Alignment.centerLeft,
-      //         child: Text(
-      //           nameService,
-      //           style: const TextStyle(
-      //             fontSize: 18,
-      //             fontWeight: FontWeight.bold,
-      //             color: Colors.black45,
-      //           ),
-      //         ),
-      //       ),
-      //     ),
-      //     Container(
-      //       alignment: Alignment.centerLeft,
-      //       child: Text(
-      //         descriptionService,
-      //         style: const TextStyle(
-      //           fontSize: 16,
-      //           color: Colors.black54,
-      //         ),
-      //       ),
-      //     ),
-      //   ],
-      // ),
     );
   }
 }

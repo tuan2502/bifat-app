@@ -332,7 +332,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
-                    const DiscoutWidget(),
+                    const DiscountWidget(),
                   ],
                 ),
               ),

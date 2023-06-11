@@ -1,3 +1,4 @@
+import 'package:bifat_app/Onboarding_Screen/onboarding_screen.dart';
 import 'package:bifat_app/components/ServiceDetail.dart';
 import 'package:bifat_app/pages/CartPage.dart';
 import 'package:bifat_app/pages/Combo1.dart';
@@ -29,7 +30,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: {
-        '/': (context) => const LoginPage(),
+        '/': (context) => OnBoardingScreen(),
+        'loginPage': (context) => const LoginPage(),
         'homePage': (context) => const HomePage(),
         'combo1Page': (context) => const LaundryCombo1Page(),
         'combo2Page': (context) => const LaundryCombo2Page(),
@@ -41,7 +43,7 @@ class MyApp extends StatelessWidget {
             price: 2,
             quantity: 1,
             description: "description"),
-        'trackingPage': (context) => TrackingPage(),
+        'trackingPage': (context) => const TrackingPage(),
         'cartPage': (context) => const CartPage(),
         'profilePage': (context) => const ProfilePage()
       },

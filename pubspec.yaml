@@ -52,15 +52,16 @@ dependencies:
   flutter_iconly: ^1.0.2
   card_swiper: ^2.0.4
   get: ^4.6.5
-  fancy_shimmer_image: ^2.0.2
-  page_transition: ^2.0.9
-  shared_preferences: 2.0.18
   http: ^0.13.5
   html_editor_enhanced: ^2.5.1
   #tai
+  introduction_screen: ^3.1.8
+  fancy_shimmer_image: ^2.0.2
+  page_transition: ^2.0.9
+  shared_preferences: ^2.0.18
   flutter_svg: ^2.0.5
   carousel_slider: ^4.2.1
-  smooth_page_indicator: ^1.0.0+2
+  smooth_page_indicator: ^1.1.0
   google_fonts: ^4.0.4
   material_design_icons_flutter: ^6.0.7096
   flutter_rating_bar: ^4.0.1

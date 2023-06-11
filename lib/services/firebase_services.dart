@@ -17,7 +17,7 @@ class FirebaseServices {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (BuildContext context, snapshot) {
           if (snapshot.hasData) {
-            print("TOKEN USER: ${UserCredential}");
+            print("TOKEN USER: $UserCredential");
             return const HomePage();
           } else {
             return const LoginPage();
@@ -63,19 +63,19 @@ class FirebaseServices {
         var responseServer = await _auth.signInWithCredential(authCredential);
         // print(await responseServer.user?.getIdToken());
         //https://hqtbe.site/api/v1/oauth2/public/login?idToken=${await response.user?.getIdToken()}
-        final String? idToken =  await responseServer.user?.getIdToken();
+        final String? idToken = await responseServer.user?.getIdToken();
         final response = await http.get(
           Uri.parse(
-          'https://bifatlaundrybe.online/api/v1/oauth2/public/login?idToken=${idToken}'),
+              'https://bifatlaundrybe.online/api/v1/oauth2/public/login?idToken=$idToken'),
         );
         if (response.statusCode == 202) {
           final json = jsonDecode(response.body);
           // print("Heloo $json");
           var accessToken = json['data']['accessToken'];
           var refreshToken = json['data']['refreshToken'];
-          final SharedPreferences? prefs = await _prefs;
-          await prefs?.setString('accessToken', accessToken);
-          await prefs?.setString('refreshToken', refreshToken);
+          final SharedPreferences prefs = await _prefs;
+          await prefs.setString('accessToken', accessToken);
+          await prefs.setString('refreshToken', refreshToken);
           LocalStorageHelper.setValue('accessToken', accessToken);
           LocalStorageHelper.setValue('refreshToken', refreshToken);
           return true;
@@ -85,10 +85,9 @@ class FirebaseServices {
       }
     } on FirebaseAuthException catch (e) {
       print(e);
-      throw e;
+      rethrow;
     }
   }
-
 
 // save fcm when user login
   void savingFCMToken(String fcmToken) async {
@@ -130,5 +129,67 @@ class FirebaseServices {
     var serviceId = prefs.getString('serviceId');
     print('serviceId: $serviceId');
     return serviceId;
+  }
+
+  static getVoucherId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var voucherId = prefs.getString('voucherId');
+    print('voucherId: $voucherId');
+    return voucherId;
+  }
+}
+
+//Voucher....
+class FirebaseVouchers {
+  handleAuthState() {
+    return StreamBuilder(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (BuildContext context, snapshot) {
+          if (snapshot.hasData) {
+            print("TOKEN USER: $UserCredential");
+            return const HomePage();
+          } else {
+            return const LoginPage();
+          }
+        });
+  }
+
+  Future<void> signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleSignInAccount =
+          await _googleSignIn.signIn();
+      if (googleSignInAccount != null) {
+        final GoogleSignInAuthentication googleSignInAuthentication =
+            await googleSignInAccount.authentication;
+        final AuthCredential authCredential = GoogleAuthProvider.credential(
+            accessToken: googleSignInAuthentication.accessToken,
+            idToken: googleSignInAuthentication.idToken);
+        await _auth.signInWithCredential(authCredential);
+        var responseServer = await _auth.signInWithCredential(authCredential);
+        print("Token: ${await responseServer.user?.getIdToken()}");
+        //print("Token: ${googleSignInAuthentication.idToken}");
+      }
+    } on FirebaseAuthException catch (e) {
+      print(e.message);
+      rethrow;
+    }
+  }
+
+  final _auth = FirebaseAuth.instance;
+  final _googleSignIn = GoogleSignIn();
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
+  static getAccessToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('accessToken');
+    print('token: $token');
+    return token;
+  }
+
+  static getVoucherId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var voucherId = prefs.getString('voucherId');
+    print('voucherId: $voucherId');
+    return voucherId;
   }
 }

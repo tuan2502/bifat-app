@@ -28,7 +28,7 @@ class ServiceApi {
     final services = data.map((e) {
       return ServicesModel.fromJson(e);
     }).toList();
-    print('services: $services');
+    //print('services: $services');
 
     return services;
   }
