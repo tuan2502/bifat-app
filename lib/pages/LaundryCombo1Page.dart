@@ -568,7 +568,6 @@ class _LaundryCombo1PageState extends State<LaundryCombo1Page> {
     final response = await ServiceApi.fetchServiceById();
     setState(() {
       service = response;
-      print('service: $service');
     });
   }
 }

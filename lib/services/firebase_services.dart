@@ -128,7 +128,14 @@ class FirebaseServices {
   static getServiceId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var serviceId = prefs.getString('serviceId');
-    print('serviceId: $serviceId');
+    // print('serviceId: $serviceId');
     return serviceId;
+  }
+
+  static getUrlVnpay() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var urlVnpay = prefs.getString('urlVnpay');
+    print('urlVnpay: $urlVnpay');
+    return urlVnpay;
   }
 }

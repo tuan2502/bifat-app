@@ -4,6 +4,7 @@ import 'package:bifat_app/pages/Combo1.dart';
 import 'package:bifat_app/pages/HomePage.dart';
 import 'package:bifat_app/pages/LaundryCombo1Page.dart';
 import 'package:bifat_app/pages/LaundryCombo2Page.dart';
+import 'package:bifat_app/pages/Page404.dart';
 import 'package:bifat_app/pages/TrackingPage.dart';
 import 'package:bifat_app/pages/login_page.dart';
 import 'package:bifat_app/pages/profile_page.dart';
@@ -43,7 +44,8 @@ class MyApp extends StatelessWidget {
             description: "description"),
         'trackingPage': (context) => TrackingPage(),
         'cartPage': (context) => const CartPage(),
-        'profilePage': (context) => const ProfilePage()
+        'profilePage': (context) => const ProfilePage(),
+        'errorPage': (context) => Page404()
       },
     );
   }

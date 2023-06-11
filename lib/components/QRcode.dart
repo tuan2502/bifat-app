@@ -71,27 +71,7 @@ class _QRcodeState extends State<QRcode> {
               style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _pickFile,
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(wPurBlue),
-                minimumSize: MaterialStateProperty.all<Size>(
-                    const Size(150, 50)), // Set the minimum button size
-                padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                    const EdgeInsets.all(16)), // Set the button padding
-              ),
-              child: const Text(
-                'Chọn tệp',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-              ),
-            ),
-            if (_file != null) ...[
-              const SizedBox(height: 20),
-              Text(
-                'File được chọn: ${_file!.path.split('/').last}',
-                style: const TextStyle(fontSize: 16),
-              ),
-            ],
+          
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
@@ -119,4 +99,5 @@ class _QRcodeState extends State<QRcode> {
       ),
     );
   }
+
 }

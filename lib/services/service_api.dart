@@ -5,8 +5,10 @@ import 'package:bifat_app/models/service_detail_model.dart';
 import 'package:bifat_app/models/services_model.dart';
 import 'package:bifat_app/services/firebase_services.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ServiceApi {
+
   /*s
   * API lấy toàn bộ services
   */
@@ -28,7 +30,7 @@ class ServiceApi {
     final services = data.map((e) {
       return ServicesModel.fromJson(e);
     }).toList();
-    print('services: $services');
+    // print('services: $services');
 
     return services;
   }
@@ -48,13 +50,12 @@ class ServiceApi {
     final json = jsonDecode(body);
     final data = json['data'];
     tempList.add(data);
-
-    //print('tempList: $tempList');
-    // print('data: $data');
-
     final service = tempList.map((e) {
       return ServiceDetailModel.fromJson(e);
     }).toList();
     return service;
   }
+
+
+
 }
