@@ -1,14 +1,17 @@
+import 'package:bifat_app/models/user_model.dart';
+import 'package:bifat_app/pages/PaymentPage.dart';
+import 'package:bifat_app/services/api_handler.dart';
 import 'package:bifat_app/services/api_notification.dart';
+import 'package:bifat_app/services/user_api.dart';
+import 'package:bifat_app/widgets/FormatValue.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../styles/color.dart';
 import '../widgets/DiscountWidget.dart';
 import '../widgets/HomeBottomBar.dart';
 import '../widgets/ServiceWidget.dart';
 import '../widgets/TipsWidget.dart';
-import '../widgets/WebViewWiget.dart';
 
 // String stringResponse;
 class HomePage extends StatefulWidget {
@@ -20,12 +23,18 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   ApiNotification apiNotification = ApiNotification();
+  String urlVnpay = '';
+  String inputValue = '';
+  List<UserModel> user = [];
+
 
   @override
   void initState() {
     super.initState();
+    fetchUser();
     apiNotification.initializeNotifications();
   }
+
 
   Future<void> fetchNotificationData() async {
     await apiNotification.showNotification("Hủy", "Thành công");
@@ -128,35 +137,38 @@ class _HomePageState extends State<HomePage> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
+                              
                                 Row(
                                   // mainAxisSize: MainAxisSize.min,
                                   children: const [
                                     SizedBox(width: 18),
-                                    Icon(Icons.wallet_membership_outlined),
+                                    Icon(Icons.wallet_membership_outlined, color: wWhite),
                                     SizedBox(width: 10),
                                     Text(
                                       'NẠP TIỀN',
                                       style: TextStyle(
+                                          color: wWhite,
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold),
                                     ),
                                     SizedBox(width: 15),
-                                    Icon(Icons.compare_arrows_rounded),
+                                    Icon(Icons.compare_arrows_rounded, color: wWhite),
                                   ],
                                 ),
-                                const Text(
-                                  "5.000.000 VNĐ",
-                                  style: TextStyle(
+                                for (var u in user ) 
+                                Text(
+                                  "${FormatValue.formatMoney(u.balance).toString()}",
+                                  style: const TextStyle(
+                                      color: wWhite,
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500),
                                 ),
                                 IconButton(
                                   icon: const Icon(Icons.add_card_rounded),
-                                  color: wBlack,
+                                  color: wWhite,
                                   iconSize: 24,
                                   onPressed: () {
                                     //Navigator.pushNamed(context, "cartPage");
-                                    String inputValue = '';
 
                                     showDialog(
                                       context: context,
@@ -165,39 +177,39 @@ class _HomePageState extends State<HomePage> {
                                           title: const Text(
                                               'Số tiền bạn muốn nạp'),
                                           content: TextField(
-                                            inputFormatters: [
-                                              FilteringTextInputFormatter
-                                                  .digitsOnly,
-                                              TextInputFormatter.withFunction(
-                                                  (oldValue, newValue) {
-                                                final intStringLength =
-                                                    newValue.text.length;
-                                                final formattedValue =
-                                                    StringBuffer();
+                                            // inputFormatters: [
+                                            //   FilteringTextInputFormatter
+                                            //       .digitsOnly,
+                                            //   TextInputFormatter.withFunction(
+                                            //       (oldValue, newValue) {
+                                            //     final intStringLength =
+                                            //         newValue.text.length;
+                                            //     final formattedValue =
+                                            //         StringBuffer();
 
-                                                for (int i = 0;
-                                                    i < intStringLength;
-                                                    i++) {
-                                                  if (i > 0 &&
-                                                      (intStringLength - i) %
-                                                              3 ==
-                                                          0) {
-                                                    formattedValue.write('.');
-                                                  }
-                                                  formattedValue
-                                                      .write(newValue.text[i]);
-                                                }
+                                            //     for (int i = 0;
+                                            //         i < intStringLength;
+                                            //         i++) {
+                                            //       if (i > 0 &&
+                                            //           (intStringLength - i) %
+                                            //                   3 ==
+                                            //               0) {
+                                            //         formattedValue.write('.');
+                                            //       }
+                                            //       formattedValue
+                                            //           .write(newValue.text[i]);
+                                            //     }
 
-                                                return TextEditingValue(
-                                                  text:
-                                                      formattedValue.toString(),
-                                                  selection:
-                                                      TextSelection.collapsed(
-                                                          offset: formattedValue
-                                                              .length),
-                                                );
-                                              }),
-                                            ],
+                                            //     return TextEditingValue(
+                                            //       text:
+                                            //           formattedValue.toString(),
+                                            //       selection:
+                                            //           TextSelection.collapsed(
+                                            //               offset: formattedValue
+                                            //                   .length),
+                                            //     );
+                                            //   }),
+                                            // ],
                                             decoration: const InputDecoration(
                                               labelText: 'Số tiền:',
                                               labelStyle: TextStyle(
@@ -259,12 +271,7 @@ class _HomePageState extends State<HomePage> {
                                                     },
                                                   );
                                                 } else {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            const PaymentWebView()),
-                                                  );
+                                                  navigateToPaymentPage();
                                                 }
                                               },
                                               child: const Text(
@@ -344,4 +351,32 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: const HomeBottomBar(),
     );
   }
+
+  Future<dynamic> getUrlPayment() async {
+    String response =
+        await ApiHandler.postDataToWallet(double.parse(inputValue), 'https://www.bifatlaundry.website/');
+    return response;
+  }
+
+  Future<void> navigateToPaymentPage() async {
+    final urlVnpay = await getUrlPayment();
+    print('urlVnpay: $urlVnpay');
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PaymentPage(url: urlVnpay),
+      ),
+    );
+  }
+
+  Future<void> fetchUser() async {
+    final response = await UserApi.fetchUser();
+    setState(() {
+      user = response;
+    });
+  }
+
+   
 }
+  
+
