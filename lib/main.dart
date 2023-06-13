@@ -1,15 +1,15 @@
-import 'package:bifat_app/Onboarding_Screen/onboarding_screen.dart';
-import 'package:bifat_app/components/ServiceDetail.dart';
-import 'package:bifat_app/pages/CartPage.dart';
-import 'package:bifat_app/pages/Combo1.dart';
-import 'package:bifat_app/pages/HomePage.dart';
-import 'package:bifat_app/pages/LaundryCombo1Page.dart';
-import 'package:bifat_app/pages/LaundryCombo2Page.dart';
-import 'package:bifat_app/pages/Page404.dart';
-import 'package:bifat_app/pages/TrackingPage.dart';
-import 'package:bifat_app/pages/login_page.dart';
-import 'package:bifat_app/pages/profile_page.dart';
+import 'package:bifat_app/page/Cart/CartPage.dart';
+import 'package:bifat_app/Tester_Page/Combo1.dart';
+import 'package:bifat_app/page/home/HomePage.dart';
+import 'package:bifat_app/page/error/Page404.dart';
+import 'package:bifat_app/page/login/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'page/profile/profile_page.dart';
+import 'page/profile/proflie_demo.dart';
+import 'page/serviceApp/LaundryCombo1Page.dart';
+import 'page/serviceApp/LaundryCombo2Page.dart';
+import 'page/tracking/TrackingPage.dart';
+import 'components/ServiceDetail.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 
@@ -29,9 +29,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/',
+      initialRoute: 'loginPage',
       routes: {
-        '/': (context) => OnBoardingScreen(),
+        // '/': (context) => const OnBoardingScreen(),
         'loginPage': (context) => const LoginPage(),
         'homePage': (context) => const HomePage(),
         'combo1Page': (context) => const LaundryCombo1Page(),
@@ -47,7 +47,8 @@ class MyApp extends StatelessWidget {
         'trackingPage': (context) => const TrackingPage(),
         'cartPage': (context) => const CartPage(),
         'profilePage': (context) => const ProfilePage(),
-        'errorPage': (context) => Page404()
+        'demoProfile': (context) => const ProfileDemo(),
+        'errorPage': (context) => const Page404()
       },
     );
   }

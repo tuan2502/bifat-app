@@ -4,8 +4,8 @@ import 'package:bifat_app/services/utils/api_endpoint.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:http/http.dart' as http;
-import 'package:bifat_app/pages/HomePage.dart';
-import 'package:bifat_app/pages/login_page.dart';
+import 'package:bifat_app/page/home/HomePage.dart';
+import 'package:bifat_app/page/login/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';

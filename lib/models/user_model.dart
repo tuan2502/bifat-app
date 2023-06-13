@@ -1,14 +1,14 @@
 class UserModel {
   final String id;
-  final String fullname;
-  final String email;
+  late final String fullname;
+  late final String email;
   final bool emailVerified;
   final String status;
-  final String? address;
-  final String? birthday;
+  late final String? address;
+  late final String? birthday;
   final String? createOn;
   final String? avatarUrl;
-  final String? phoneNum;
+  late final String? phoneNum;
   final String? provider;
   final double? balance;
   final String? role;
@@ -19,11 +19,11 @@ class UserModel {
       required this.email,
       required this.emailVerified,
       required this.status,
-      this.address,
-      this.birthday,
+      required this.address,
+      required this.birthday,
       this.createOn,
-      this.avatarUrl,
-      this.phoneNum,
+      required this.avatarUrl,
+      required this.phoneNum,
       this.provider,
       this.balance,
       this.role});

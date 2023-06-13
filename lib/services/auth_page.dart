@@ -1,5 +1,5 @@
-import 'package:bifat_app/pages/HomePage.dart';
-import 'package:bifat_app/pages/login_page.dart';
+import 'package:bifat_app/page/home/HomePage.dart';
+import 'package:bifat_app/page/login/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
