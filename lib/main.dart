@@ -36,9 +36,9 @@ class MyApp extends StatelessWidget {
         ),
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: '/',
+      initialRoute: 'loginPage',
       routes: {
-        '/': (context) => OnBoardingScreen(),
+        // '/': (context) => const OnBoardingScreen(),
         'loginPage': (context) => const LoginPage(),
         'homePage': (context) => const HomePage(),
         'combo1Page': (context) => const LaundryCombo1Page(),
