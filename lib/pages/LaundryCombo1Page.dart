@@ -1,11 +1,13 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:bifat_app/components/Checkbox.dart';
 import 'package:bifat_app/models/service_detail_model.dart';
 import 'package:bifat_app/services/service_api.dart';
+import 'package:bifat_app/services/user_service_api.dart';
 import 'package:bifat_app/widgets/FormatValue.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../styles/color.dart';
 import 'CartPage.dart';
 
@@ -17,7 +19,7 @@ class LaundryCombo1Page extends StatefulWidget {
 }
 
 class _LaundryCombo1PageState extends State<LaundryCombo1Page> {
-  List<ServiceDetailModel> service = [];
+  List<ServiceDetailModel> serviceDetail = [];
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController kilogramController = TextEditingController();
@@ -35,6 +37,7 @@ class _LaundryCombo1PageState extends State<LaundryCombo1Page> {
   void initState() {
     super.initState();
     fetchServices();
+    // UserServiceApi.checkUserService();
     startAnimation();
   }
 
@@ -117,29 +120,35 @@ class _LaundryCombo1PageState extends State<LaundryCombo1Page> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-      // for (var s in service)
         title: const Text(
           'Giặt Combo 1',
           style: TextStyle(
-              color: wBlack,
+              color: wWhite,
               fontSize: 23,
               fontWeight: FontWeight.bold // Thay đổi màu chữ của tiêu đề
               ),
         ),
-        iconTheme: const IconThemeData(
-            color: wBlack, size: 30 // Thay đổi màu của biểu tượng nút Back
-            ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            // Navigate back to the previous screen
+            Navigator.pop(context);
+          },
+        ),
         backgroundColor: wPurBlue,
       ),
       backgroundColor: Colors.white,
-      body: ListView(
+      body: serviceDetail.isEmpty
+          ? const Center(
+        child: CircularProgressIndicator(),
+      ) : ListView(
         shrinkWrap: true,
         children: [
-          for (var service in service)
+          for (var serviceDetail in serviceDetail)
           Padding(
             padding: const EdgeInsets.all(0),
             child: Image.network(
-              service.image_url.toString(),
+              serviceDetail.image_url.toString(),
               height: 270,
             ),
           ),
@@ -151,14 +160,15 @@ class _LaundryCombo1PageState extends State<LaundryCombo1Page> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    for (var service in service)
+                    for (var serviceDetail in serviceDetail)
                     Text(
-                      '${service.name}',
-                      style: const TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
+                      '${utf8.decode(serviceDetail.name.toString().runes.toList())}',
+                          style: GoogleFonts.openSans(
+                            textStyle: const TextStyle(
+                              fontSize: 30,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          )),
                     Row(
                       children: [
                         const Icon(
@@ -188,9 +198,9 @@ class _LaundryCombo1PageState extends State<LaundryCombo1Page> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                  for (var service in service)
+                  for (var serviceDetail in serviceDetail)
                      Text(
-                      '${FormatValue.formatMoney(service.price).toString()}',
+                      '${FormatValue.formatMoney(serviceDetail.price).toString()}',
                       style: const TextStyle(
                         color: wBlue,
                         fontSize: 22,
@@ -321,30 +331,6 @@ class _LaundryCombo1PageState extends State<LaundryCombo1Page> {
                 key: _formKey,
                 child: Column(
                   children: [
-                    // TextFormField(
-                    //   controller: kilogramController,
-                    //   decoration: const InputDecoration(
-                    //     labelText: 'Số kilogram',
-                    //     labelStyle: TextStyle(color: wBlack),
-                    //     filled: true,
-                    //   ),
-                    //   cursorColor: wBlack,
-                    // ),
-                    // TextFormField(
-                    //   controller: chatLieuVaiController,
-                    //   decoration: const InputDecoration(
-                    //     labelText: 'Chất liệu vải',
-                    //     labelStyle: TextStyle(color: wBlack),
-                    //     filled: true,
-                    //   ),
-                    //   cursorColor: wBlack,
-                    //   validator: (value) {
-                    //     if (value == null || value.isEmpty) {
-                    //       return 'Vui lòng nhập chất liệu vải';
-                    //     }
-                    //     return null;
-                    //   },
-                    // ),
                     TextFormField(
                       controller: loaiDoController,
                       decoration: const InputDecoration(
@@ -466,6 +452,7 @@ class _LaundryCombo1PageState extends State<LaundryCombo1Page> {
               ),
             ),
           ),
+          
           Container(
             height: 70,
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -484,9 +471,9 @@ class _LaundryCombo1PageState extends State<LaundryCombo1Page> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                for (var service in service)
+                for (var serviceDetail in serviceDetail)
                   Text(
-                    '${FormatValue.formatMoney(service.price).toString()}',
+                    '${FormatValue.formatMoney(serviceDetail.price).toString()}',
                     style: const TextStyle(
                       fontSize: 25,
                       fontWeight: FontWeight.bold,
@@ -561,13 +548,15 @@ class _LaundryCombo1PageState extends State<LaundryCombo1Page> {
           ),
         ],
       ),
+    
     );
   }
 
   Future<void> fetchServices() async {
     final response = await ServiceApi.fetchServiceById();
     setState(() {
-      service = response;
+      serviceDetail = response;
+      
     });
   }
 }

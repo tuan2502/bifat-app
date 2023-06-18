@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:developer';
+import 'package:bifat_app/models/service_detail_model.dart';
+import 'package:bifat_app/services/service_api.dart';
+import 'package:bifat_app/widgets/FormatValue.dart';
 import 'package:flutter/material.dart';
 import '../styles/color.dart';
-import '../components/Checkbox.dart';
-import 'CartPage.dart';
 
 class LaundryServicePage extends StatefulWidget {
   const LaundryServicePage({Key? key}) : super(key: key);
@@ -12,21 +15,15 @@ class LaundryServicePage extends StatefulWidget {
 }
 
 class _LaundryServicePageState extends State<LaundryServicePage> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController kilogramController = TextEditingController();
-  final TextEditingController chatLieuVaiController = TextEditingController();
-  final TextEditingController loaiDoController = TextEditingController();
-  final TextEditingController diaChiController = TextEditingController();
-  String selectedMuiHuong = '';
-  bool isFastDelivery = false;
+  ServiceDetailModel? serviceDetail;
+  bool isError = false;
+  String errorStr = "";
   bool _isTextVisible = true;
-  bool isShippingSelected = false;
-  String address = '';
-  String selectShip = '';
 
   @override
   void initState() {
     super.initState();
+    fetchService();
     // Start the animation
     startAnimation();
   }
@@ -41,409 +38,213 @@ class _LaundryServicePageState extends State<LaundryServicePage> {
 
   @override
   void dispose() {
-    kilogramController.dispose();
-    chatLieuVaiController.dispose();
-    loaiDoController.dispose();
-    diaChiController.dispose();
     super.dispose();
-  }
-
-  void toggleShipping(bool? value) {
-    setState(() {
-      isShippingSelected = value ?? false;
-    });
-  }
-
-  void showShippingDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Shipping'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              DropdownButtonFormField<String>(
-                decoration: const InputDecoration(labelText: 'Shipping'),
-                items: <String>['1 Chiều', '2 Chiều'].map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    selectShip = newValue ?? '';
-                  });
-                },
-              ),
-              const SizedBox(height: 8),
-              TextField(
-                decoration: const InputDecoration(
-                  labelText: 'Address',
-                ),
-                onChanged: (value) {
-                  address = value;
-                  // Handle address input
-                },
-              ),
-            ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text(
-                'Đồng ý',
-                style: TextStyle(color: Colors.red, fontSize: 15),
-              ),
-              onPressed: () {
-                // Handle shipping information submission
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Giặt thường',
-          style: TextStyle(
-              color: wBlack,
-              fontSize: 23,
-              fontWeight: FontWeight.bold // Thay đổi màu chữ của tiêu đề
-              ),
-        ),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            // Hàm xử lý sự kiện khi người dùng bấm nút back
-            // Ví dụ:
-            Navigator.of(context).pop();
-          },
-        ),
-        iconTheme: const IconThemeData(
-            color: wBlack, size: 30 // Thay đổi màu của biểu tượng nút Back
+    return isError
+        ? Center(
+            child: Text(
+              "An error occurred $errorStr",
+              style: const TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
             ),
-        backgroundColor: wPurBlue,
-      ),
-      backgroundColor: Colors.white,
-      body: ListView(
-        shrinkWrap: true,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(0),
-            child: Image.asset(
-              "assets/images/bifat (6).png",
-              height: 270,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'Giặt thường',
-                      style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.star,
-                          color: Colors.red,
-                          size: 25,
-                        ),
-                        AnimatedContainer(
-                          duration: const Duration(milliseconds: 500),
-                          curve: Curves.easeInOut,
-                          child: Text(
-                            'BEST SELLER',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                              color: _isTextVisible
-                                  ? Colors.red
-                                  : Colors.transparent,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 15),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      '13.000 VNĐ',
-                      style: TextStyle(
-                        color: wBlue,
-                        fontSize: 22,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    Row(
-                      children: const [
-                        Text(
-                          "4.7",
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.w400),
-                        ),
-                        Icon(
-                          Icons.star,
-                          color: wBlue,
-                          size: 20,
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Container(
-                      width: 100,
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      decoration: BoxDecoration(
+          )
+        : serviceDetail == null
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : Scaffold(
+                appBar: AppBar(
+                  title: Text(
+                    '${utf8.decode(serviceDetail!.name.toString().runes.toList())}',
+                    style: const TextStyle(
                         color: wWhite,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: const [
-                          Text(
-                            "24/7",
-                            style: TextStyle(
-                              color: wBlue,
-                              fontSize: 18,
-                            ),
-                          ),
-                          Text(
-                            "Nhận dịch vụ",
-                            style: TextStyle(
-                              color: Colors.black54,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      width: 100,
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      decoration: BoxDecoration(
-                        color: wWhite,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: const [
-                          Text(
-                            "60p",
-                            style: TextStyle(
-                              color: wBlue,
-                              fontSize: 18,
-                            ),
-                          ),
-                          Text(
-                            "Xử lý dịch vụ",
-                            style: TextStyle(
-                              color: Colors.black54,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      width: 100,
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      decoration: BoxDecoration(
-                        color: wWhite,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: const [
-                          Text(
-                            "60s",
-                            style: TextStyle(
-                              color: wBlue,
-                              fontSize: 18,
-                            ),
-                          ),
-                          Text(
-                            "Thông báo",
-                            style: TextStyle(
-                              color: Colors.black54,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                const Text(
-                  "Dịch vụ giặt ủi mang tới cho bạn một trải nghiệm tuyệt với và giúp bạn tràn đầy năng lượng sau 1 ngày đi làm mệt mỏi nhưng vẫn thơm tho",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 17,
+                        fontSize: 23,
+                        fontWeight:
+                            FontWeight.bold // Thay đổi màu chữ của tiêu đề
+                        ),
                   ),
-                  textAlign: TextAlign.justify,
+                  leading: IconButton(
+                    icon: Icon(Icons.arrow_back),
+                    onPressed: () {
+                      // Hàm xử lý sự kiện khi người dùng bấm nút back
+                      // Ví dụ:
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  iconTheme: const IconThemeData(
+                      color: wWhite,
+                      size: 30 // Thay đổi màu của biểu tượng nút Back
+                      ),
+                  backgroundColor: wPurBlue,
                 ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Container(
-              //color: const Color.fromARGB(82, 209, 168, 91),
-              color: wPurBlue,
-              child: Form(
-                key: _formKey,
-                child: Column(
+                backgroundColor: Colors.white,
+                body: ListView(
+                  shrinkWrap: true,
                   children: [
-                    TextFormField(
-                      controller: kilogramController,
-                      decoration: const InputDecoration(
-                        labelText: 'Số kilogram',
-                        labelStyle: TextStyle(color: wBlack),
-                        filled: true,
+                    Padding(
+                      padding: const EdgeInsets.all(0),
+                      child: Image.network(
+                        serviceDetail!.image_url.toString(),
+                        height: 270,
                       ),
-                      cursorColor: wBlack,
                     ),
-                    TextFormField(
-                      controller: chatLieuVaiController,
-                      decoration: const InputDecoration(
-                        labelText: 'Chất liệu vải',
-                        labelStyle: TextStyle(color: wBlack),
-                        filled: true,
-                      ),
-                      cursorColor: wBlack,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Vui lòng nhập chất liệu vải';
-                        }
-                        return null;
-                      },
-                    ),
-                    TextFormField(
-                      controller: loaiDoController,
-                      decoration: const InputDecoration(
-                        labelText: 'Loại đồ',
-                        labelStyle: TextStyle(color: wBlack),
-                        filled: true,
-                      ),
-                      cursorColor: wBlack,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Vui lòng nhập loại đồ';
-                        }
-                        return null;
-                      },
-                    ),
-                    DropdownButtonFormField<String>(
-                      value: selectedMuiHuong = 'Downy',
-                      decoration: const InputDecoration(
-                        labelText: ' Mùi hương',
-                        labelStyle: TextStyle(color: wBlack),
-                        filled: true,
-                      ),
-                      items: <String>['Downy', 'Comfort', 'Omo']
-                          .map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          selectedMuiHuong = newValue ?? '';
-                        });
-                      },
-                    ),
-                    TextFormField(
-                      controller: diaChiController,
-                      decoration: const InputDecoration(
-                        labelText: 'Địa chỉ',
-                        labelStyle: TextStyle(color: wBlack),
-                        filled: true,
-                      ),
-                      cursorColor: wBlack,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Vui lòng nhập địa chỉ';
-                        }
-                        return null;
-                      },
-                    ),
-                    Wrap(
-                      children: [
-                        Row(
-                          children: [
-                            Checkbox(
-                              value: isShippingSelected,
-                              onChanged: toggleShipping,
-                            ),
-                            const Text(
-                              'Shipping',
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.w500),
-                            ),
-                          ],
-                        ),
-                        if (isShippingSelected)
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                    Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                '${utf8.decode(serviceDetail!.name.toString().runes.toList())}',
+                                style: const TextStyle(
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  const Icon(
+                                    Icons.star,
+                                    color: Colors.red,
+                                    size: 25,
+                                  ),
+                                  AnimatedContainer(
+                                    duration: const Duration(milliseconds: 500),
+                                    curve: Curves.easeInOut,
+                                    child: Text(
+                                      'BEST SELLER',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                        color: _isTextVisible
+                                            ? Colors.red
+                                            : Colors.transparent,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 15),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                '${FormatValue.formatMoney(serviceDetail!.price).toString()}',
+                                style: const TextStyle(
+                                  color: wBlue,
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              Row(
+                                children: const [
+                                  Text(
+                                    "4.7",
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                  Icon(
+                                    Icons.star,
+                                    color: wBlue,
+                                    size: 20,
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Container(
+                                width: 100,
                                 padding:
-                                    const EdgeInsets.only(top: 1, left: 15),
-                                width: 500,
+                                    const EdgeInsets.symmetric(vertical: 10),
+                                decoration: BoxDecoration(
+                                  color: wWhite,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
                                 child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: const [
                                     Text(
-                                      "Shipping: $selectShip",
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w400,
+                                      "24/7",
+                                      style: TextStyle(
+                                        color: wBlue,
+                                        fontSize: 18,
                                       ),
                                     ),
-                                    const SizedBox(
-                                      width: 10,
+                                    Text(
+                                      "Nhận dịch vụ",
+                                      style: TextStyle(
+                                        color: Colors.black54,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                width: 100,
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10),
+                                decoration: BoxDecoration(
+                                  color: wWhite,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: const [
+                                    Text(
+                                      "60p",
+                                      style: TextStyle(
+                                        color: wBlue,
+                                        fontSize: 18,
+                                      ),
                                     ),
                                     Text(
-                                      'Address: $address',
-                                      style: const TextStyle(
+                                      "Xử lý dịch vụ",
+                                      style: TextStyle(
+                                        color: Colors.black54,
                                         fontSize: 16,
-                                        fontWeight: FontWeight.w400,
                                       ),
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 10,
                                     ),
-                                    ElevatedButton(
-                                      onPressed: showShippingDialog,
-                                      style: ElevatedButton.styleFrom(
-                                          backgroundColor: wWhite),
-                                      child: const Text(
-                                        'Edit Shipping',
-                                        style: TextStyle(color: Colors.black),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                width: 100,
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10),
+                                decoration: BoxDecoration(
+                                  color: wWhite,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: const [
+                                    Text(
+                                      "60s",
+                                      style: TextStyle(
+                                        color: wBlue,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                    Text(
+                                      "Thông báo",
+                                      style: TextStyle(
+                                        color: Colors.black54,
+                                        fontSize: 16,
                                       ),
                                     ),
                                   ],
@@ -451,104 +252,70 @@ class _LaundryServicePageState extends State<LaundryServicePage> {
                               ),
                             ],
                           ),
-                      ],
-                    ),
-                    Row(
-                      children: const [
-                        CheckBoxFast(name: "Giặt nhanh(+30k)"),
-                      ],
+                          const SizedBox(height: 10),
+                          Text(
+                            "${utf8.decode(serviceDetail!.description.toString().runes.toList())}",
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 17,
+                            ),
+                            textAlign: TextAlign.justify,
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
-              ),
-            ),
-          ),
-          Container(
-            height: 70,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            decoration: BoxDecoration(
-              color: wWhite,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 3,
-                  blurRadius: 10,
-                  offset: const Offset(0, 3),
-                ),
-              ],
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  "\$120",
-                  style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      // Xử lý submit dữ liệu khi các trường hợp lệ
-                      String kilogram = kilogramController.text;
-                      String chatLieuVai = chatLieuVaiController.text;
-                      String loaiDo = loaiDoController.text;
-                      String muiHuong = selectedMuiHuong;
-                      String diaChi = diaChiController.text;
-                      bool isFastDelivery = this.isFastDelivery;
-
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: const Text('Thông báo!!'),
-                            content:
-                                const Text('Đã nhận dịch vụ thành công.'),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context)
-                                      .pop(); // Đóng hộp thoại thông báo
-                                  Navigator.pushReplacement(
-                                    // Điều hướng trở về trang chủ
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => const CartPage()),
-                                  );
-                                },
-                                child: const Text('OK'),
+                floatingActionButton: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 50,
+                      width: 300,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 30),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            //gửi dữ liệu dịch từ trang này qua OrderPage
+                            Navigator.pushNamed(context, "orderPage", arguments: serviceDetail);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: wPurBlue,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const [
+                              Icon(
+                                Icons.shopping_cart,
+                                color: wWhite,
+                              ),
+                              SizedBox(width: 10),
+                              Text(
+                                'Đặt hàng ngay',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ],
-                          );
-                        },
-                      );
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: const [
-                      Icon(
-                        Icons.check,
-                        color: Colors.white,
+                          ),
+                        ),
                       ),
-                      SizedBox(width: 8),
-                      Text(
-                        'Đặt thôi',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
+              );
+  }
+
+  Future<void> fetchService() async {
+    try {
+      serviceDetail = await ServiceApi.fetchServiceById1();
+    } catch (error) {
+      isError = true;
+      errorStr = error.toString();
+      log("error $error");
+    }
+    setState(() {});
   }
 }

@@ -182,14 +182,14 @@ class FirebaseVouchers {
   static getAccessToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('accessToken');
-    print('token: $token');
+    // print('token: $token');
     return token;
   }
 
   static getVoucherId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var voucherId = prefs.getString('voucherId');
-    print('voucherId: $voucherId');
+    // print('voucherId: $voucherId');
     return voucherId;
   }
 

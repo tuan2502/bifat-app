@@ -12,13 +12,21 @@ class PaymentSuccessPage extends StatelessWidget {
         title: const Text(
           'Thanh toán thành công',
           style: TextStyle(
-              color: wBlack,
+              color: wWhite,
               fontSize: 23,
               fontWeight: FontWeight.bold // Thay đổi màu chữ của tiêu đề
               ),
         ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            // Hàm xử lý sự kiện khi người dùng bấm nút back
+            // Ví dụ:
+            Navigator.pushNamed(context, 'homePage');
+          },
+        ),
         iconTheme: const IconThemeData(
-            color: wBlack, size: 30 // Thay đổi màu của biểu tượng nút Back
+            color: wWhite, size: 30 // Thay đổi màu của biểu tượng nút Back
             ),
         backgroundColor: wPurBlue,
       ),

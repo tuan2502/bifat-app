@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../styles/color.dart';
-import '../components/SelectPay.dart';
 import '../widgets/OrderWidget.dart';
 
 class CartPage extends StatelessWidget {
@@ -233,7 +232,6 @@ class CartPage extends StatelessWidget {
                     ],
                   ),
                 ),
-                const PaymentOptions(),
                 const SizedBox(height: 0),
                 const OrderScreen(),
                 //const ServiceBottomBar(),

@@ -25,7 +25,7 @@ class _HomePageState extends State<HomePage> {
   ApiNotification apiNotification = ApiNotification();
   String urlVnpay = '';
   String inputValue = '';
-  List<UserModel> user = [];
+  UserModel? user ;
 
 
   @override
@@ -155,9 +155,8 @@ class _HomePageState extends State<HomePage> {
                                     Icon(Icons.compare_arrows_rounded, color: wWhite),
                                   ],
                                 ),
-                                for (var u in user ) 
                                 Text(
-                                  "${FormatValue.formatMoney(u.balance).toString()}",
+                                  "${FormatValue.formatMoney(user!.balance).toString()}",
                                   style: const TextStyle(
                                       color: wWhite,
                                       fontSize: 16,
@@ -168,8 +167,6 @@ class _HomePageState extends State<HomePage> {
                                   color: wWhite,
                                   iconSize: 24,
                                   onPressed: () {
-                                    //Navigator.pushNamed(context, "cartPage");
-
                                     showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
@@ -353,14 +350,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<dynamic> getUrlPayment() async {
-    String response =
-        await ApiHandler.postDataToWallet(double.parse(inputValue), 'https://www.bifatlaundry.website/');
+    String response = await ApiHandler.postDataToWallet(double.parse(inputValue));
     return response;
   }
 
   Future<void> navigateToPaymentPage() async {
     final urlVnpay = await getUrlPayment();
-    print('urlVnpay: $urlVnpay');
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -368,9 +363,9 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
   Future<void> fetchUser() async {
     final response = await UserApi.fetchUser();
+
     setState(() {
       user = response;
     });
