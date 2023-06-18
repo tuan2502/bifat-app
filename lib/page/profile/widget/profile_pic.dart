@@ -80,7 +80,7 @@ class _ProfilePicState extends State<ProfilePic> {
   Future<void> fetchUser() async {
     final response = await UserApi.fetchUser();
     setState(() {
-      users = response;
+      users = [response];
     });
   }
 }

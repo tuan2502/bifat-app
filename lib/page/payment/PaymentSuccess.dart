@@ -1,6 +1,6 @@
+import 'package:bifat_app/styles/color.dart';
 import 'package:flutter/material.dart';
 
-import '../styles/color.dart';
 
 class PaymentSuccessPage extends StatelessWidget {
   const PaymentSuccessPage({Key? key}) : super(key: key);

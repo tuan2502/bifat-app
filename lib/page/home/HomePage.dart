@@ -154,9 +154,8 @@ class _HomePageState extends State<HomePage> {
                                         color: wWhite),
                                   ],
                                 ),
-                                for (var u in user)
                                   Text(
-                                    FormatValue.formatMoney(u.balance)
+                                    FormatValue.formatMoney(user!.balance)
                                         .toString(),
                                     style: const TextStyle(
                                         color: wWhite,
@@ -352,7 +351,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<dynamic> getUrlPayment() async {
     String response = await ApiHandler.postDataToWallet(
-        double.parse(inputValue), 'https://www.bifatlaundry.website/');
+        double.parse(inputValue));
     return response;
   }
 

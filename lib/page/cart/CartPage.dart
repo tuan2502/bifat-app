@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../styles/color.dart';
-import '../../components/SelectPay.dart';
 import '../Order/OrderWidget.dart';
 
 class CartPage extends StatelessWidget {

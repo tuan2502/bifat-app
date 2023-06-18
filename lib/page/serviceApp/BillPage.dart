@@ -5,12 +5,13 @@ import 'package:bifat_app/models/item_type_model.dart';
 import 'package:bifat_app/models/material_model.dart';
 import 'package:bifat_app/models/order_model.dart';
 import 'package:bifat_app/models/service_detail_model.dart';
-import 'package:bifat_app/pages/PaymentPage.dart';
-import 'package:bifat_app/pages/PaymentSuccess.dart';
+import 'package:bifat_app/page/payment/PaymentPage.dart';
+import 'package:bifat_app/page/payment/PaymentSuccess.dart';
+
 import 'package:bifat_app/services/user_service_api.dart';
+import 'package:bifat_app/styles/color.dart';
+import 'package:bifat_app/utils/FormatValue.dart';
 import 'package:flutter/material.dart';
-import '../styles/color.dart';
-import 'package:bifat_app/widgets/FormatValue.dart';
 
 class BillPage extends StatelessWidget {
   const BillPage({super.key});

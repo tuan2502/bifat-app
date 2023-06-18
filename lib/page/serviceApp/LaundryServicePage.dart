@@ -3,9 +3,10 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:bifat_app/models/service_detail_model.dart';
 import 'package:bifat_app/services/service_api.dart';
-import 'package:bifat_app/widgets/FormatValue.dart';
+import 'package:bifat_app/styles/color.dart';
+import 'package:bifat_app/utils/FormatValue.dart';
+import 'package:bifat_app/widgets/FormNormalService.dart';
 import 'package:flutter/material.dart';
-import '../styles/color.dart';
 
 class LaundryServicePage extends StatefulWidget {
   const LaundryServicePage({Key? key}) : super(key: key);

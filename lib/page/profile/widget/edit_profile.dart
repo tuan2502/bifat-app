@@ -191,7 +191,7 @@ class _EditProfileState extends State<EditProfile> {
   Future<void> fetchUser() async {
     final response = await UserApi.fetchUser();
     setState(() {
-      users = response;
+      users = [response];
     });
   }
 }
