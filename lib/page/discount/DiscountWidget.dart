@@ -2,8 +2,7 @@ import 'package:bifat_app/services/voucher_api.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../models/voucher_model.dart';
-
+import '../../models/model_voucher/voucher_model.dart';
 import 'Discount.dart';
 import 'DiscoutPageDemo.dart';
 

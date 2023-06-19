@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_iconly/flutter_iconly.dart';
 
 import '../../../models/user_model.dart';
 import '../../../services/user_api.dart';
@@ -38,19 +37,19 @@ class _ProfilePicState extends State<ProfilePic> {
                   ),
                 ),
               ),
-            Positioned(
-              bottom: 0,
-              right: 0,
-              child: Container(
-                width: 35,
-                height: 35,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100),
-                  color: Colors.yellowAccent,
-                ),
-                child: const Icon(IconlyLight.edit),
-              ),
-            ),
+            // Positioned(
+            //   bottom: 0,
+            //   right: 0,
+            //   child: Container(
+            //     width: 35,
+            //     height: 35,
+            //     decoration: BoxDecoration(
+            //       borderRadius: BorderRadius.circular(100),
+            //       color: Colors.yellowAccent,
+            //     ),
+            //     child: const Icon(IconlyLight.edit),
+            //   ),
+            // ),
           ],
         ),
         const SizedBox(height: 10),

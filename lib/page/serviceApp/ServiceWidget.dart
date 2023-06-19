@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-import 'package:bifat_app/models/services_model.dart';
 import 'package:bifat_app/services/service_api.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../components/ServiceMore.dart';
 import '../../const/api_const.dart';
+import '../../models/model_service/services_model.dart';
 import '../../services/firebase_services.dart';
 
 class ServiceWidget extends StatefulWidget {

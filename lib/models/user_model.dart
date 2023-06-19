@@ -12,21 +12,30 @@ class UserModel {
   final String? provider;
   final double? balance;
   final String? role;
+  // final String? addressNum;
+  // final String? province;
+  // final String? district;
+  // final String? ward;
 
-  UserModel(
-      {required this.id,
-      required this.fullname,
-      required this.email,
-      required this.emailVerified,
-      required this.status,
-      required this.address,
-      required this.birthday,
-      this.createOn,
-      required this.avatarUrl,
-      required this.phoneNum,
-      this.provider,
-      this.balance,
-      this.role});
+  UserModel({
+    required this.id,
+    required this.fullname,
+    required this.email,
+    required this.emailVerified,
+    required this.status,
+    required this.address,
+    required this.birthday,
+    this.createOn,
+    required this.avatarUrl,
+    required this.phoneNum,
+    this.provider,
+    this.balance,
+    this.role,
+    // this.addressNum,
+    // this.district,
+    // this.province,
+    // this.ward,
+  });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     final id = json['id'];
@@ -42,6 +51,10 @@ class UserModel {
     final provider = json['provider'] ?? '';
     final balance = json['balance'] ?? '';
     final role = json['role'] ?? '';
+    // final addressNum = json['addressNum'] ?? '';
+    // final district = json['district'] ?? '';
+    // final provice = json['provice'] ?? '';
+    // final ward = json['ward'] ?? '';
     return UserModel(
       id: json['id'],
       fullname: json['fullname'],

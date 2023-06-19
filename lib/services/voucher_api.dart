@@ -4,8 +4,8 @@ import 'package:bifat_app/const/api_const.dart';
 import 'package:bifat_app/services/firebase_services.dart';
 import 'package:http/http.dart' as http;
 
-import '../models/voucher_detail_model.dart';
-import '../models/voucher_model.dart';
+import '../models/model_voucher/voucher_detail_model.dart';
+import '../models/model_voucher/voucher_model.dart';
 
 class VoucherApi {
   static Future<List<VouchersModel>> fetchVouchers() async {

@@ -1,12 +1,11 @@
 import 'dart:async';
 
 import 'package:bifat_app/components/Checkbox.dart';
-import 'package:bifat_app/models/service_detail_model.dart';
 import 'package:bifat_app/services/service_api.dart';
 import 'package:bifat_app/utils/FormatValue.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
+import '../../models/model_service/service_detail_model.dart';
 import '../cart/CartPage.dart';
 import '../../styles/color.dart';
 

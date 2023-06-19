@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:bifat_app/models/voucher_detail_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../models/model_voucher/voucher_detail_model.dart';
 import '../../services/voucher_api.dart';
 import '../../styles/color.dart';
 import '../../utils/FormatValue.dart';

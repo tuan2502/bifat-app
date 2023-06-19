@@ -1,10 +1,11 @@
 import 'dart:convert';
 
 import 'package:bifat_app/const/api_const.dart';
-import 'package:bifat_app/models/service_detail_model.dart';
-import 'package:bifat_app/models/services_model.dart';
 import 'package:bifat_app/services/firebase_services.dart';
 import 'package:http/http.dart' as http;
+
+import '../models/model_service/service_detail_model.dart';
+import '../models/model_service/services_model.dart';
 
 class ServiceApi {
   /*s
