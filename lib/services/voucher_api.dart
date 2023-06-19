@@ -21,12 +21,12 @@ class VoucherApi {
     if (res.statusCode == 201) {
       final body = res.body;
       final json = jsonDecode(body);
-      print('json: $json');
+      // print('json: $json');
       final data = json['data'] as List<dynamic>;
       final vouchers = data.map((e) {
         return VouchersModel.fromJson(e);
       }).toList();
-      print('vouchers: $vouchers');
+      // print('vouchers: $vouchers');
       return vouchers;
     } else {
       throw Exception('Failed to fetch vouchers');

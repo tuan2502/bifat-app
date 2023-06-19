@@ -1,15 +1,18 @@
-import 'package:bifat_app/page/Cart/CartPage.dart';
-import 'package:bifat_app/Tester_Page/Combo1.dart';
-import 'package:bifat_app/page/home/HomePage.dart';
+import 'package:bifat_app/components/ServiceDetail.dart';
+import 'package:bifat_app/page/cart/CartPage.dart';
 import 'package:bifat_app/page/error/Page404.dart';
+import 'package:bifat_app/page/home/HomePage.dart';
 import 'package:bifat_app/page/login/login_page.dart';
+import 'package:bifat_app/page/profile/profile_page.dart';
+import 'package:bifat_app/page/profile/proflie_demo.dart';
+import 'package:bifat_app/page/serviceApp/BillPage.dart';
+import 'package:bifat_app/page/serviceApp/LaundryCombo1Page.dart';
+import 'package:bifat_app/page/serviceApp/LaundryServicePage.dart';
+import 'package:bifat_app/page/serviceApp/OrderPage.dart';
+import 'package:bifat_app/page/tracking/TrackingPage.dart';
+
 import 'package:firebase_core/firebase_core.dart';
-import 'page/profile/profile_page.dart';
-import 'page/profile/proflie_demo.dart';
-import 'page/serviceApp/LaundryCombo1Page.dart';
-import 'page/serviceApp/LaundryCombo2Page.dart';
-import 'page/tracking/TrackingPage.dart';
-import 'components/ServiceDetail.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 
@@ -28,16 +31,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        textTheme: GoogleFonts.openSansTextTheme(
+          Theme.of(context).textTheme,
+        ),
+      ),
       debugShowCheckedModeBanner: false,
       initialRoute: 'loginPage',
       routes: {
         // '/': (context) => const OnBoardingScreen(),
         'loginPage': (context) => const LoginPage(),
         'homePage': (context) => const HomePage(),
-        'combo1Page': (context) => const LaundryCombo1Page(),
-        'combo2Page': (context) => const LaundryCombo2Page(),
-        'laundryPage': (context) => const LaundryCombo1Page(),
-        'combo1': (context) => const Combo1(),
+        'laundryPage': (context) => const LaundryServicePage(),
         'servicePage': (context) => const ServiceDetailPage(
             imgUrl: "assets/images/bifat (2).png",
             serviceName: "serviceName",
@@ -47,7 +52,9 @@ class MyApp extends StatelessWidget {
         'trackingPage': (context) => const TrackingPage(),
         'cartPage': (context) => const CartPage(),
         'profilePage': (context) => const ProfilePage(),
-        'demoProfile': (context) => const ProfileDemo(),
+        'profileDemo': (context) => const ProfileDemo(),
+        'orderPage': (context) => const OrderPage(),
+        'billPage': (context) => const BillPage(),
         'errorPage': (context) => const Page404()
       },
     );

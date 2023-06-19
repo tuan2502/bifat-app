@@ -1,6 +1,6 @@
+import 'package:bifat_app/styles/color.dart';
 import 'package:flutter/material.dart';
 
-import '../../styles/color.dart';
 
 class PaymentSuccessPage extends StatelessWidget {
   const PaymentSuccessPage({Key? key}) : super(key: key);
@@ -16,6 +16,14 @@ class PaymentSuccessPage extends StatelessWidget {
               fontSize: 23,
               fontWeight: FontWeight.bold // Thay đổi màu chữ của tiêu đề
               ),
+        ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            // Hàm xử lý sự kiện khi người dùng bấm nút back
+            // Ví dụ:
+            Navigator.pushNamed(context, 'homePage');
+          },
         ),
         iconTheme: const IconThemeData(
             color: wWhite, size: 30 // Thay đổi màu của biểu tượng nút Back

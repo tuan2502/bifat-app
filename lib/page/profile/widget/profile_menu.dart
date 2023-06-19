@@ -1,6 +1,5 @@
 import 'package:bifat_app/styles/color.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class ProfileMenu extends StatelessWidget {
   const ProfileMenu({
@@ -10,7 +9,8 @@ class ProfileMenu extends StatelessWidget {
     this.press,
   }) : super(key: key);
 
-  final String text, icon;
+  final String text;
+  final Icon icon; // Thay đổi kiểu dữ liệu của icon thành Icon
   final VoidCallback? press;
 
   @override
@@ -28,11 +28,7 @@ class ProfileMenu extends StatelessWidget {
         onPressed: press,
         child: Row(
           children: [
-            SvgPicture.asset(
-              icon,
-              width: 22,
-              colorFilter: const ColorFilter.mode(wWhite, BlendMode.srcIn),
-            ),
+            icon, // Sử dụng biến icon trực tiếp
             const SizedBox(width: 20),
             Expanded(child: Text(text)),
             const Icon(Icons.arrow_forward_ios),

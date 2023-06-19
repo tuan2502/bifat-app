@@ -22,7 +22,7 @@ class Body extends StatelessWidget {
           const SizedBox(height: 20),
           ProfileMenu(
             text: "My Account",
-            icon: "assets/icons/User Icon.svg",
+            icon: const Icon(Icons.person),
             press: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => const EditProfile()));
@@ -30,22 +30,22 @@ class Body extends StatelessWidget {
           ),
           ProfileMenu(
             text: "Notifications",
-            icon: "assets/icons/Bell.svg",
+            icon: const Icon(Icons.notifications),
             press: () {},
           ),
           ProfileMenu(
             text: "Settings",
-            icon: "assets/icons/Settings.svg",
+            icon: const Icon(Icons.settings),
             press: () {},
           ),
           ProfileMenu(
             text: "Help Center",
-            icon: "assets/icons/Question mark.svg",
+            icon: const Icon(Icons.help_center),
             press: () {},
           ),
           ProfileMenu(
             text: "Log Out",
-            icon: "assets/icons/Log out.svg",
+            icon: const Icon(Icons.logout),
             press: () async {
               await FirebaseServices().signOut();
               Navigator.push(context,

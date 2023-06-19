@@ -42,7 +42,7 @@ class _ServiceWidgetState extends State<ServiceWidget> {
               },
               child: ServiceMore(
                 imgPath: service.image_url.toString(),
-                nameService: service.name.toString(),
+                nameService: utf8.decode(service.name.toString().runes.toList()),
                 descriptionService:
                     'Giặt theo kí - sự lựa chọn của mọi nhà',
               ),

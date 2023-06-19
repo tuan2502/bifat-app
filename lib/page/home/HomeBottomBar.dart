@@ -66,7 +66,7 @@ class HomeBottomBar extends StatelessWidget {
           InkWell(
             onTap: () {
               //Navigator.pushNamed(context, 'profilePage');
-              Navigator.pushNamed(context, 'demoProfile');
+              Navigator.pushNamed(context, 'profileDemo');
             },
             child: const Icon(
               Icons.account_box_outlined,

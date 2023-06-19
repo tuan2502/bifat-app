@@ -7,33 +7,14 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiHandler {
-  static Future<List<dynamic>> getAllData() async {
-    try {
-      var token = await FirebaseServices.getAccessToken();
-      http.Response response;
-      response = await http.get(Uri.parse('${BASE_URL}service'), headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token',
-      });
-      var data = jsonDecode(response.body);
-      List tempList = [];
-      // print(data["data"]);
-      return tempList;
-    } catch (e) {
-      print('An error occurred1 $e');
-      throw e.toString();
-    }
-  }
-
-  static Future postDataToWallet(double amount, String returnUrl) async {
+  static Future postDataToWallet(double amount) async {
     var token = await FirebaseServices.getAccessToken();
+    String returnUrl = 'https://www.bifatlaundry.website/';
     var dataInput = jsonEncode(<String, dynamic>{
       'amount': amount,
       'returnUrl': returnUrl,
     });
-    final url = Uri.parse(
-        'https://bifatlaundrybe.online/api/v1/transaction/wallet/vnPay');
+    final url = Uri.parse('${BASE_URL}/transaction/wallet/deposit');
     final response = await http.post(
       url,
       headers: <String, String>{
@@ -49,7 +30,7 @@ class ApiHandler {
       print('urlVnpay1: $urlVnpay');
       return urlVnpay;
     } else {
-      print('API call failed');
+      print('API post failed');
     }
   }
 }
