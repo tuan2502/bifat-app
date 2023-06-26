@@ -48,9 +48,11 @@ class PaymentSuccessPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-            const Text(
-              'Cảm ơn bạn đã đặt dịch vụ tại BIFAT LAUNDRY.',
-              style: TextStyle(fontSize: 18),
+            const Center(
+              child: Text(
+                'Cảm ơn bạn đã đặt dịch vụ tại BIFAT LAUNDRY.',
+                style: TextStyle(fontSize: 18),
+              ),
             ),
             const SizedBox(height: 10),
             const Text(

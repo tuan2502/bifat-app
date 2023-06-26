@@ -38,7 +38,7 @@ class UserServiceApi {
 //get serviceId checkUserService
   static Future<UserServiceModel> checkUserService() async {
     var token = await FirebaseServices.getAccessToken();
-    var serviceId = 'b9abc377-406c-4827-8dad-a1b8de27861b';
+    var serviceId =  await FirebaseServices.getServiceId();
     var url = '$BASE_URL/user-service/check-user-service?serviceId=${serviceId}';
     final uri = Uri.parse(url);
     final response = await http.get(uri, headers: {

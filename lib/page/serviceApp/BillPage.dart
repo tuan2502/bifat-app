@@ -6,6 +6,7 @@ import 'package:bifat_app/models/material_model.dart';
 import 'package:bifat_app/models/order_model.dart';
 import 'package:bifat_app/page/payment/PaymentPage.dart';
 import 'package:bifat_app/page/payment/PaymentSuccess.dart';
+import 'package:bifat_app/page/payment/QRcode.dart';
 
 import 'package:bifat_app/services/user_service_api.dart';
 import 'package:bifat_app/styles/color.dart';
@@ -39,7 +40,7 @@ class BillPage extends StatelessWidget {
     List<ItemTypeModel> itemTypeModel = args['itemTypeModel'];
     List<MaterialModel> materialModel = args['materialModel'];
     int selectedPay = args['payment'];
-    // print('pay1: ${orderModel.fragrantId}');
+    print('pay1: ${orderModel.address}');
 
     double total = orderModel.totalPrice ?? 0.0;
     // print('data: ${serviceDetail.id}');
@@ -200,24 +201,31 @@ class BillPage extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
-                            "Địa chỉ:",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF475269),
+                          const Expanded(
+                            child: Text(
+                              'Địa chỉ:',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF475269),
+                              ),
                             ),
                           ),
-                          Text(
-                            orderModel.isShipping == 'SHIPPING'
-                                ? orderModel.address.toString()
-                                : 'Không giao nhận hàng',
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF475269),
+                          Expanded(
+                            flex: 2,
+                            child: Text(
+                              orderModel.isShipping == 'SHIPPING'
+                                  ? orderModel.address.toString()
+                                  : 'Không giao nhận hàng',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF475269),
+                              ),
                             ),
-                          )
+                          ),
                         ],
                       ),
 
@@ -378,6 +386,13 @@ class BillPage extends StatelessWidget {
                                           MaterialPageRoute(
                                               builder: (context) =>
                                                   const PaymentSuccessPage()));
+                                    } else if (selectedPay == 3) {
+                                      await UserServiceApi.postCostFromWallet(
+                                          response.toString());
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => QRcode(imgPath: 'assets/images/Banking (1).png',)));
                                     }
                                   },
                                   child: const Text(

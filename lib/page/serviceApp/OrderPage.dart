@@ -3,6 +3,9 @@ import 'dart:convert';
 import 'package:bifat_app/models/fragrant_model.dart';
 import 'package:bifat_app/models/item_type_model.dart';
 import 'package:bifat_app/models/material_model.dart';
+import 'package:bifat_app/models/model_address/district_model.dart';
+import 'package:bifat_app/models/model_address/province_model.dart';
+import 'package:bifat_app/models/model_address/ward_model.dart';
 import 'package:bifat_app/models/order_model.dart';
 import 'package:bifat_app/models/user_service_model.dart';
 import 'package:bifat_app/services/service_api.dart';
@@ -28,6 +31,11 @@ class _OrderPageState extends State<OrderPage> {
   List<FragrantModel> fragrantModel = [];
   List<ItemTypeModel> itemTypeModel = [];
   List<MaterialModel> materialModel = [];
+  List<ProvinceModel> provinceModel = [];
+  List<DistrictModel> provinceModelByCode = [];
+  List<DistrictModel> districtModel = [];
+  List<WardModel> districtModelByCode = [];
+  List<WardModel> wardModel = [];
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController kilogramController = TextEditingController();
@@ -39,6 +47,11 @@ class _OrderPageState extends State<OrderPage> {
   String selectedMuiHuong = '';
   String selectedLoaiDo = '';
   String selectedChatLieu = '';
+  String selectedProvince = '';
+  String selectedDistrict = '';
+  String selectedWard = '';
+  String? nameDistrict ='';
+  String? nameWard ='';
   bool isShippingSelected = false;
   bool isFastLaundrySelected = false;
   String address = '';
@@ -59,6 +72,7 @@ class _OrderPageState extends State<OrderPage> {
     fetchFragrants();
     fetchItemTypes();
     fetchMaterials();
+    fetchProvinceByCode();
     getWallet();
   }
 
@@ -145,58 +159,6 @@ class _OrderPageState extends State<OrderPage> {
     });
   }
 
-  void showShippingDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Giao nhận hàng (+ 30.000 VNĐ)'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              DropdownButtonFormField<String>(
-                decoration: const InputDecoration(labelText: 'Giao nhận hàng'),
-                items: <String>['1 Chiều', '2 Chiều'].map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    selectShip = newValue ?? '';
-                  });
-                },
-              ),
-              const SizedBox(height: 8),
-              TextField(
-                decoration: const InputDecoration(
-                  labelText: 'Địa chỉ',
-                ),
-                onChanged: (value) {
-                  address = value;
-                  // Handle address input
-                },
-              ),
-            ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text(
-                'Đồng ý',
-                style: TextStyle(color: Colors.red, fontSize: 15),
-              ),
-              onPressed: () {
-                // Handle shipping information submission
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   Widget selectedPayment() {
     final ServiceDetailModel serviceDetail =
         ModalRoute.of(context)?.settings.arguments as ServiceDetailModel;
@@ -255,6 +217,21 @@ class _OrderPageState extends State<OrderPage> {
                               color: Color.fromARGB(255, 235, 188, 185)))
                       : null,
                 ),
+                RadioListTile<int>(
+                  value: 3,
+                  groupValue: selectedPay,
+                  activeColor: wWhite,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedPay = value!;
+                    });
+                  },
+                  title: const Text(
+                    'Thanh toán qua Banking',
+                    style: TextStyle(color: wWhite),
+                  ),
+                  controlAffinity: ListTileControlAffinity.leading,
+                ),
               ]
             : <Widget>[
                 RadioListTile<int>(
@@ -274,9 +251,31 @@ class _OrderPageState extends State<OrderPage> {
               ]);
   }
 
+  Future<void> _pickDistrict(newValue) async {
+    setState(() {
+      selectedDistrict = newValue ?? '';
+      fetchDistrictsByCode(selectedDistrict);
+      provinceModelByCode.forEach((e){
+        if(e.code == selectedDistrict){
+          nameDistrict = utf8.decode(e.name.toString().runes.toList());
+        }
+      });
+    });
+  }
+
+  Future<void> _pickWard(newValue) async {
+    setState(() {
+      selectedWard = newValue ?? '';
+      districtModelByCode.forEach((e){
+        if(e.code == selectedWard){
+          nameWard = utf8.decode(e.name.toString().runes.toList());
+        }
+      });
+    });
+  }
+
   Widget formNormalService() {
     List<DateTime>? date = dateList;
-
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Container(
@@ -467,49 +466,73 @@ class _OrderPageState extends State<OrderPage> {
                   ),
                   if (isShippingSelected)
                     Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.only(top: 1, left: 15),
-                          width: 500,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Vận chuyển: $selectShip",
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w400,
-                                  color: wWhite,
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                'Địa chỉ: $address',
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w400,
-                                  color: wWhite,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 10,
-                              ),
-                              ElevatedButton(
-                                onPressed: showShippingDialog,
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: wWhite),
-                                child: const Text(
-                                  'Chỉnh sửa',
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                              ),
-                            ],
+                      children: <Widget>[
+                        DropdownButtonFormField<String>(
+                          value: provinceModelByCode.isNotEmpty
+                              ? selectedDistrict =
+                                  '${provinceModelByCode[0].code}'
+                              : null,
+                          dropdownColor: wPurBlue,
+                          itemHeight: 50,
+                          decoration: const InputDecoration(
+                            labelText: 'Quận / Huyện',
+                            labelStyle: TextStyle(
+                                color: wWhite, fontWeight: FontWeight.bold),
+                            fillColor: wPurBlue,
+                            filled: true,
                           ),
+                          style: const TextStyle(color: wWhite, fontSize: 16),
+                          items: provinceModelByCode.map((var value) {
+                            return DropdownMenuItem<String>(
+                              value: value.code,
+                              child: Text(
+                                  '${utf8.decode(value!.name.toString().runes.toList())}'),
+                            );
+                          }).toList(),
+                          onChanged: _pickDistrict,
+                        ),
+                        DropdownButtonFormField<String>(
+                          value: districtModelByCode.isNotEmpty
+                              ? selectedWard = '${districtModelByCode[0].code}'
+                              : null,
+                          dropdownColor: wPurBlue,
+                          itemHeight: 50,
+                          decoration: const InputDecoration(
+                            labelText: 'Phường / Xã',
+                            labelStyle: TextStyle(
+                                color: wWhite, fontWeight: FontWeight.bold),
+                            fillColor: wPurBlue,
+                            filled: true,
+                          ),
+                          style: const TextStyle(color: wWhite, fontSize: 16),
+                          items: districtModelByCode.map((var value) {
+                            return DropdownMenuItem<String>(
+                              value: value.code,
+                              child: Text(
+                                  '${utf8.decode(value!.name.toString().runes.toList())}'),
+                            );
+                          }).toList(),
+                          onChanged: _pickWard,
+                        ),
+                        TextField(
+                          decoration: const InputDecoration(
+                            labelText: 'Số nhà / đường',
+                            labelStyle: TextStyle(
+                                color: wWhite,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold),
+                            hintStyle: TextStyle(color: wWhite, fontSize: 16),
+                            filled: true,
+                          ),
+                          cursorColor: wWhite,
+                          style: const TextStyle(color: wWhite, fontSize: 16),
+                          onChanged: (value) {
+                            address = value;
+                          },
                         ),
                       ],
-                    ),
+                    )
+          
                 ],
               ),
               Column(
@@ -524,7 +547,6 @@ class _OrderPageState extends State<OrderPage> {
 
   Widget formComboService() {
     List<DateTime>? date = dateList;
-
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Container(
@@ -564,34 +586,6 @@ class _OrderPageState extends State<OrderPage> {
                   return null;
                 },
               ),
-              // DropdownButtonFormField<String>(
-              //   value: fragrantModel.isNotEmpty
-              //       ? selectedLoaiDo = '${itemTypeModel[0].id}'
-              //       : null,
-              //   dropdownColor: wPurBlue,
-              //   itemHeight: 50,
-              //   decoration: const InputDecoration(
-              //     labelText: 'Loại đồ',
-              //     labelStyle:
-              //         TextStyle(color: wWhite, fontWeight: FontWeight.bold),
-              //     fillColor: wPurBlue,
-              //     filled: true,
-              //   ),
-              //   style: const TextStyle(color: wWhite, fontSize: 16),
-              //   items: itemTypeModel.map((var value) {
-              //     return DropdownMenuItem<String>(
-              //       value: value.id,
-              //       child: Text(
-              //           '${utf8.decode(value!.name.toString().runes.toList())}'),
-              //     );
-              //   }).toList(),
-              //   onChanged: (String? newValue) {
-              //     setState(() {
-              //       selectedLoaiDo = newValue ?? '';
-              //     });
-              //   },
-              // ),
-
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -662,50 +656,80 @@ class _OrderPageState extends State<OrderPage> {
                     ],
                   ),
                   if (isShippingSelected)
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.only(top: 1, left: 15),
-                          width: 500,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Vận chuyển: $selectShip",
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w400,
-                                  color: wWhite,
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                'Địa chỉ: $address',
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w400,
-                                  color: wWhite,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 10,
-                              ),
-                              ElevatedButton(
-                                onPressed: showShippingDialog,
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: wWhite),
-                                child: const Text(
-                                  'Chỉnh sửa',
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                              ),
-                            ],
+                    if (isShippingSelected)
+                      Column(
+                        children: <Widget>[
+                          DropdownButtonFormField<String>(
+                            value: provinceModelByCode.isNotEmpty
+                                ? selectedDistrict =
+                                    '${provinceModelByCode[0].code}'
+                                : null,
+                            dropdownColor: wPurBlue,
+                            itemHeight: 50,
+                            decoration: const InputDecoration(
+                              labelText: 'Quận / Huyện',
+                              labelStyle: TextStyle(
+                                  color: wWhite, fontWeight: FontWeight.bold),
+                              fillColor: wPurBlue,
+                              filled: true,
+                            ),
+                            style: const TextStyle(color: wWhite, fontSize: 16),
+                            items: provinceModelByCode.map((var value) {
+                              return DropdownMenuItem<String>(
+                                value: value.code,
+                                child: Text(
+                                    '${utf8.decode(value!.name.toString().runes.toList())}'),
+                              );
+                            }).toList(),
+                            onChanged: _pickDistrict,
                           ),
-                        ),
-                      ],
-                    ),
+                          DropdownButtonFormField<String>(
+                            value: districtModelByCode.isNotEmpty
+                                ? selectedWard =
+                                    '${districtModelByCode[0].code}'
+                                : null,
+                            dropdownColor: wPurBlue,
+                            itemHeight: 50,
+                            decoration: const InputDecoration(
+                              labelText: 'Phường / Xã',
+                              labelStyle: TextStyle(
+                                  color: wWhite, fontWeight: FontWeight.bold),
+                              fillColor: wPurBlue,
+                              filled: true,
+                            ),
+                            style: const TextStyle(color: wWhite, fontSize: 16),
+                            items: districtModelByCode.map((var value) {
+                              return DropdownMenuItem<String>(
+                                value: value.code,
+                                child: Text(
+                                    '${utf8.decode(value!.name.toString().runes.toList())}'),
+                              );
+                            }).toList(),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                selectedWard = newValue ?? '';
+                                print('ward: $selectedWard');
+                              });
+                            },
+                          ),
+                          TextField(
+                            decoration: const InputDecoration(
+                              labelText: 'Số nhà / đường',
+                              labelStyle: TextStyle(
+                                  color: wWhite,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold),
+                              hintStyle: TextStyle(color: wWhite, fontSize: 16),
+                              filled: true,
+                            ),
+                            cursorColor: wWhite,
+                            style: const TextStyle(color: wWhite, fontSize: 16),
+                            onChanged: (value) {
+                              address = value;
+                            },
+                          ),
+                        ],
+                      )
                 ],
               ),
               Column(
@@ -754,7 +778,10 @@ class _OrderPageState extends State<OrderPage> {
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 0),
                               child: ElevatedButton(
-                                onPressed: () {
+                                onPressed: () async {
+                                  print('District: $nameDistrict');
+                                  print('Ward: ${nameWard}');
+                                  print('address: $address');
                                   totalPrice = 0.0;
                                   totalBill();
                                   //gửi dữ liệu dịch từ trang này qua OrderPage
@@ -765,14 +792,14 @@ class _OrderPageState extends State<OrderPage> {
                                     materialId: selectedChatLieu,
                                     userVoucherId: '',
                                     description: '',
-                                    address: address,
+                                    address: '$address, $nameWard, $nameDistrict, Thành phố Hồ Chí Minh',
                                     receiveDate: dateList![0].toString(),
                                     deliveryDate: dateList![1].toString(),
                                     totalPrice: totalPrice,
                                     totalQuantity:
                                         double.parse(kilogramController.text),
                                     isShipping: isShippingSelected
-                                        ? 'SHIPPED'
+                                        ? 'SHIPPING'
                                         : 'NOSHIPPED',
                                   );
                                   Navigator.pushNamed(
@@ -836,9 +863,6 @@ class _OrderPageState extends State<OrderPage> {
                                 onPressed: () {
                                   totalPrice = 0.0;
                                   totalBill();
-                                  // print('pay: $selectedPay');
-
-                                  //gửi dữ liệu dịch từ trang này qua OrderPage
                                   orderModel = OrderModel(
                                     userServiceId: userServiceModel!.id,
                                     fragrantId: selectedMuiHuong,
@@ -846,7 +870,7 @@ class _OrderPageState extends State<OrderPage> {
                                     materialId: selectedChatLieu,
                                     userVoucherId: '',
                                     description: 'string',
-                                    address: address,
+                                    address: '$address $nameWard, $nameDistrict, Thành phố Hồ Chí Minh',
                                     receiveDate: dateList![0].toString(),
                                     deliveryDate: dateList![1].toString(),
                                     totalPrice: totalPrice! +
@@ -868,7 +892,6 @@ class _OrderPageState extends State<OrderPage> {
                                       'payment': selectedPay,
                                     },
                                   );
-                                  print('order: ${orderModel?.totalPrice}');
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: wPurBlue,
@@ -903,6 +926,8 @@ class _OrderPageState extends State<OrderPage> {
     });
   }
 
+
+//get API
   Future<void> checkUserService() async {
     final response = await UserServiceApi.checkUserService();
     setState(() {
@@ -928,6 +953,41 @@ class _OrderPageState extends State<OrderPage> {
     final response = await ServiceApi.fetchMaterials();
     setState(() {
       materialModel = response;
+    });
+  }
+
+  Future<void> fetchProvinceByCode() async {
+    final response = await UserApi.fetchProvinceByCode();
+    setState(() {
+      provinceModelByCode = response;
+    });
+  }
+
+  Future<void> fetchDistrictsByCode(String code) async {
+    final response = await UserApi.fetchDistrictsByCode(code);
+    setState(() {
+      districtModelByCode = response;
+    });
+  }
+
+  Future<void> fetchProvince() async {
+    final response = await UserApi.fetchProvinces();
+    setState(() {
+      provinceModel = response;
+    });
+  }
+
+  Future<void> fetchDistricts() async {
+    final response = await UserApi.fetchDistricts();
+    setState(() {
+      districtModel = response;
+    });
+  }
+
+  Future<void> fetchWards() async {
+    final response = await UserApi.fetchWards();
+    setState(() {
+      wardModel = response;
     });
   }
 

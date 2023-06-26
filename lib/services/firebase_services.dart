@@ -120,21 +120,20 @@ class FirebaseServices {
   static getAccessToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('accessToken');
-    print('token: $token');
+    // print('token: $token');
     return token;
   }
 
   static getServiceId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var serviceId = prefs.getString('serviceId');
-    // print('serviceId: $serviceId');
+    print('serviceId1: $serviceId');
     return serviceId;
   }
 
   static getVoucherId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var voucherId = prefs.getString('voucherId');
-    print('voucherId: $voucherId');
     return voucherId;
   }
 }

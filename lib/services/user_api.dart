@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:bifat_app/const/api_const.dart';
+import 'package:bifat_app/models/model_address/district_model.dart';
+import 'package:bifat_app/models/model_address/ward_model.dart';
 import 'package:bifat_app/models/user_model.dart';
 import 'package:bifat_app/services/firebase_services.dart';
 import 'package:flutter/material.dart';
@@ -23,8 +25,6 @@ class UserApi with ChangeNotifier {
     final body = res.body;
     final json = jsonDecode(body);
     final data = json['data'];
-    // final SharedPreferences prefs = await SharedPreferences.getInstance();
-    // await prefs.setString('wallet', data['balance']);
     return UserModel.fromJson(data);
   }
 
@@ -78,7 +78,6 @@ class UserApi with ChangeNotifier {
     );
     try {
       if (response.statusCode == 200) {
-        print("data put: ${response.body}");
         print('Profile updated successfully');
       } else {
         print('Failed to update profile. Error: ${response.statusCode}');
@@ -92,57 +91,113 @@ class UserApi with ChangeNotifier {
     var token = await FirebaseServices.getAccessToken();
     const url = '$BASE_URL/address/provinces';
     final uri = Uri.parse(url);
-    final response = await http.get(uri, headers: {
+    final res = await http.get(uri, headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'Authorization': 'Bearer $token',
     });
-
-    if (response.statusCode == 200) {
-      final responseBody = response.body;
-      final provincesData = json.decode(responseBody);
-      if (provincesData != null && provincesData['provinces'] != null) {
-        final List<ProvinceModel> provinces = [];
-        for (var provinceData in provincesData['provinces']) {
-          final province = ProvinceModel.fromJson(provinceData);
-          provinces.add(province);
-        }
-        return provinces;
-      }
+    if (res.statusCode == 200) {
+      final body = res.body;
+      final json = jsonDecode(body);
+      final data = json['data'] as List<dynamic>;
+      final provinces = data.map((e) {
+        return ProvinceModel.fromJson(e);
+      }).toList();
+      return provinces;
+    } else {
+      throw ('Failed to fetch districts. Error: ${res.statusCode}');
     }
-
-    throw Exception('Failed to fetch provinces. Error: ${response.statusCode}');
   }
 
-  static Future<void> fetchDistricts() async {
+  static Future<List<DistrictModel>> fetchProvinceByCode() async {
+    var token = await FirebaseServices.getAccessToken();
+    const url = '$BASE_URL/address/provinces/79';
+    final uri = Uri.parse(url);
+    final res = await http.get(uri, headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    });
+    if (res.statusCode == 200) {
+      final body = res.body;
+      final json = jsonDecode(body);
+      final data = json['data'] as List<dynamic>;
+      final districts = data.map((e) {
+        return DistrictModel.fromJson(e);
+      }).toList();
+      return districts;
+    } else {
+      throw ('Failed to fetch districts. Error: ${res.statusCode}');
+    }
+  }
+
+  static Future<List<WardModel>> fetchDistrictsByCode(String code) async {
+    var token = await FirebaseServices.getAccessToken();
+    var url = '$BASE_URL/address/districts/${code}';
+    final uri = Uri.parse(url);
+    final res = await http.get(uri, headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    });
+    if (res.statusCode == 200) {
+      final body = res.body;
+      final json = jsonDecode(body);
+      final data = json['data'] as List<dynamic>;
+      final wards = data.map((e) {
+        return WardModel.fromJson(e);
+      }).toList();
+      return wards;
+    } else {
+      throw ('Failed to fetch districts. Error: ${res.statusCode}');
+    }
+  }
+
+  static Future<List<DistrictModel>> fetchDistricts() async {
+    var token = await FirebaseServices.getAccessToken();
+    // print('token: $token');
     const url = '$BASE_URL/address/districts';
     final uri = Uri.parse(url);
-    final response = await http.get(uri);
-
-    if (response.statusCode == 200) {
-      final provincesData = json.decode(response.body);
-      // Process the data here
+    final res = await http.get(uri, headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    });
+    if (res.statusCode == 200) {
+      final body = res.body;
+      final json = jsonDecode(body);
+      final data = json['data'] as List<dynamic>;
+      final districts = data.map((e) {
+        return DistrictModel.fromJson(e);
+      }).toList();
+      return districts;
     } else {
-      print('Failed to fetch districts. Error: ${response.statusCode}');
+      throw ('Failed to fetch districts. Error: ${res.statusCode}');
     }
   }
 
-  static Future<void> fetchWards() async {
+  static Future<List<WardModel>> fetchWards() async {
+    var token = await FirebaseServices.getAccessToken();
+    // print('token: $token');
     const url = '$BASE_URL/address/wards';
     final uri = Uri.parse(url);
-    final response = await http.get(uri);
-
-    if (response.statusCode == 200) {
-      final provincesData = json.decode(response.body);
-      // Process the data here
+    final res = await http.get(uri, headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    });
+    if (res.statusCode == 200) {
+      final body = res.body;
+      final json = jsonDecode(body);
+      final data = json['data'] as List<dynamic>;
+      final wards = data.map((e) {
+        return WardModel.fromJson(e);
+      }).toList();
+      return wards;
     } else {
-      print('Failed to fetch wards. Error: ${response.statusCode}');
+      throw ('Failed to fetch districts. Error: ${res.statusCode}');
     }
   }
-  // static getWallet() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   var wallet = prefs.getString('wallet');
-  //   print('wallet: $wallet');
-  //   return wallet;
-  // }
+  
+  
 }

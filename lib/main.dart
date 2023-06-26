@@ -6,7 +6,6 @@ import 'package:bifat_app/page/login/login_page.dart';
 import 'package:bifat_app/page/profile/profile_page.dart';
 import 'package:bifat_app/page/profile/proflie_demo.dart';
 import 'package:bifat_app/page/serviceApp/BillPage.dart';
-import 'package:bifat_app/page/serviceApp/LaundryCombo1Page.dart';
 import 'package:bifat_app/page/serviceApp/LaundryServicePage.dart';
 import 'package:bifat_app/page/serviceApp/OrderPage.dart';
 import 'package:bifat_app/page/tracking/TrackingPage.dart';

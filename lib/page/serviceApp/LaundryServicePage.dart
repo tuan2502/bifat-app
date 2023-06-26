@@ -4,7 +4,6 @@ import 'dart:developer';
 import 'package:bifat_app/services/service_api.dart';
 import 'package:bifat_app/styles/color.dart';
 import 'package:bifat_app/utils/FormatValue.dart';
-import 'package:bifat_app/widgets/FormNormalService.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/model_service/service_detail_model.dart';
@@ -70,8 +69,6 @@ class _LaundryServicePageState extends State<LaundryServicePage> {
                   leading: IconButton(
                     icon: const Icon(Icons.arrow_back),
                     onPressed: () {
-                      // Hàm xử lý sự kiện khi người dùng bấm nút back
-                      // Ví dụ:
                       Navigator.of(context).pop();
                     },
                   ),
@@ -260,8 +257,7 @@ class _LaundryServicePageState extends State<LaundryServicePage> {
                           ),
                           const SizedBox(height: 10),
                           Text(
-                            utf8.decode(
-                                serviceDetail!.toString().runes.toList()),
+                            utf8.decode(serviceDetail!.description.toString().runes.toList()),
                             style: const TextStyle(
                               color: Colors.black,
                               fontSize: 17,
