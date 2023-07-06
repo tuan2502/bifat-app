@@ -181,7 +181,7 @@ class FirebaseVouchers {
   static getAccessToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('accessToken');
-    // print('token: $token');
+    print('token: $token');
     return token;
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../styles/color.dart';
 
@@ -18,7 +19,7 @@ class ServiceMore extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       //margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 9),
-      margin: const EdgeInsets.only(left: 12, top: 15, right: 5),
+      margin: const EdgeInsets.only(left: 12, top: 20, right: 12),
       decoration: const BoxDecoration(
         color: wWhite,
         borderRadius: BorderRadius.all(
@@ -29,8 +30,8 @@ class ServiceMore extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            width: 120, // Tùy chỉnh kích thước rộng của hình ảnh
-            height: 120, // Tùy chỉnh kích thước cao của hình ảnh
+            width: 90, // Tùy chỉnh kích thước rộng của hình ảnh
+            height: 90, // Tùy chỉnh kích thước cao của hình ảnh
             //alignment: Alignment.center,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
@@ -38,19 +39,13 @@ class ServiceMore extends StatelessWidget {
                 image: NetworkImage(imgPath),
                 fit: BoxFit.cover,
               ),
-              boxShadow: const [
-                BoxShadow(
-                  color: wBlack12,
-                  blurRadius: 5,
-                  spreadRadius: 2,
-                ),
-              ],
+              
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 10, left: 10),
+            padding: const EdgeInsets.only(top: 20, left: 10),
             child: Text(
-              nameService,
+              '${nameService.capitalize}',
               style: const TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.bold,

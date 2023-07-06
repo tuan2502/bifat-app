@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:bifat_app/models/fragrant_model.dart';
 import 'package:bifat_app/models/item_type_model.dart';
 import 'package:bifat_app/models/material_model.dart';
+import 'package:bifat_app/models/order_bill_model.dart';
 import 'package:bifat_app/models/order_model.dart';
 import 'package:bifat_app/page/payment/PaymentPage.dart';
 import 'package:bifat_app/page/payment/PaymentSuccess.dart';
@@ -20,7 +21,7 @@ class BillPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double shipping = 30000;
+    double shipping;
     double fastService = 30000;
 
     final Map<String, dynamic> args =
@@ -36,15 +37,24 @@ class BillPage extends StatelessWidget {
     }
     ServiceDetailModel serviceDetail = args['serviceDetail'];
     OrderModel orderModel = args['orderModel'];
-    List<FragrantModel> fragrantModel = args['fragrantModel'];
-    List<ItemTypeModel> itemTypeModel = args['itemTypeModel'];
-    List<MaterialModel> materialModel = args['materialModel'];
+    OrderBillModel dataBill = args['dataBill'];
     int selectedPay = args['payment'];
-    print('pay1: ${orderModel.address}');
+    double? total = dataBill.totalPrice;
+    double? servicePrice;
 
-    double total = orderModel.totalPrice ?? 0.0;
-    // print('data: ${serviceDetail.id}');
+    // print('price: ${total}');
+    if(DateTime.parse(orderModel.deliveryDate.toString()).difference(DateTime.parse( orderModel.receiveDate.toString())).inDays <= 1){
+      servicePrice = orderModel.totalQuantity !* 15000;
+      if (serviceDetail.price! == 0) {
+        shipping = total !- fastService - serviceDetail.price!;
+      }
+      shipping = total !- fastService - servicePrice;
 
+    } else {
+      servicePrice = total;
+      shipping = total !- serviceDetail.price!;
+    }
+    
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -155,7 +165,9 @@ class BillPage extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            "${FormatValue.formatMoney(serviceDetail!.price).toString()}",
+                            serviceDetail.price == 0
+                                ? '${FormatValue.formatMoney(servicePrice).toString()}'
+                                : '${FormatValue.formatMoney(serviceDetail!.price).toString()}',
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -182,7 +194,7 @@ class BillPage extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            orderModel.isShipping == 'SHIPPING'
+                            orderModel.isShipping == 'SHIPPED'
                                 ? '${FormatValue.formatMoney(shipping).toString()}'
                                 : '0 VNĐ',
                             style: const TextStyle(
@@ -214,7 +226,7 @@ class BillPage extends StatelessWidget {
                           Expanded(
                             flex: 2,
                             child: Text(
-                              orderModel.isShipping == 'SHIPPING'
+                              orderModel.isShipping == 'SHIPPED'
                                   ? orderModel.address.toString()
                                   : 'Không giao nhận hàng',
                               maxLines: 1,
@@ -307,7 +319,7 @@ class BillPage extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            "${FormatValue.formatMoney(orderModel?.totalPrice).toString()}",
+                            "${FormatValue.formatMoney(total).toString()}",
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -357,9 +369,9 @@ class BillPage extends StatelessWidget {
                                 const SizedBox(width: 160),
                                 TextButton(
                                   onPressed: () async {
-                                    var response =
-                                        await UserServiceApi.orderService(
-                                            orderModel);
+                                    var response = dataBill;
+                                    print('orderId: ${response}');
+
                                     if (selectedPay == 0) {
                                       Navigator.push(
                                           context,
@@ -368,11 +380,8 @@ class BillPage extends StatelessWidget {
                                                   const PaymentSuccessPage()));
                                     } else if (selectedPay == 1) {
                                       print(
-                                          'total: ${orderModel.totalPrice!.toDouble()}');
-                                      String urlVnpay = await UserServiceApi
-                                          .postCostFromVNPay(
-                                              orderModel.totalPrice!.toDouble(),
-                                              response.toString());
+                                          'total: ${total}');
+                                      String urlVnpay = await UserServiceApi.postCostFromVNPay( total!.toDouble(), response.orderId.toString());
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -380,19 +389,20 @@ class BillPage extends StatelessWidget {
                                                   PaymentPage(url: urlVnpay)));
                                     } else if (selectedPay == 2) {
                                       await UserServiceApi.postCostFromWallet(
-                                          response.toString());
+                                          response.orderId.toString());
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
                                                   const PaymentSuccessPage()));
                                     } else if (selectedPay == 3) {
-                                      await UserServiceApi.postCostFromWallet(
-                                          response.toString());
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) => QRcode(imgPath: 'assets/images/Banking (1).png',)));
+                                              builder: (context) => QRcode(
+                                                    imgPath:
+                                                        'assets/images/Banking (1).png',
+                                                  )));
                                     }
                                   },
                                   child: const Text(

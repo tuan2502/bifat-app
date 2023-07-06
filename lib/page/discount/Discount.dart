@@ -58,6 +58,8 @@ class Discount extends StatelessWidget {
             padding: const EdgeInsets.only(top: 10, left: 5),
             child: Text(
               utf8.decode(nameService.runes.toList()),
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
               style: GoogleFonts.getFont(
                 'Noto Sans',
                 fontSize: 20,

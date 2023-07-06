@@ -6,6 +6,7 @@ import 'package:bifat_app/models/material_model.dart';
 import 'package:bifat_app/models/model_address/district_model.dart';
 import 'package:bifat_app/models/model_address/province_model.dart';
 import 'package:bifat_app/models/model_address/ward_model.dart';
+import 'package:bifat_app/models/order_bill_model.dart';
 import 'package:bifat_app/models/order_model.dart';
 import 'package:bifat_app/models/user_service_model.dart';
 import 'package:bifat_app/services/service_api.dart';
@@ -37,6 +38,7 @@ class _OrderPageState extends State<OrderPage> {
   List<WardModel> districtModelByCode = [];
   List<WardModel> wardModel = [];
 
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController kilogramController = TextEditingController();
   final TextEditingController chatLieuVaiController = TextEditingController();
@@ -57,11 +59,13 @@ class _OrderPageState extends State<OrderPage> {
   String address = '';
   int paymentValue = 0;
   String selectShip = '';
+  String addressDetail = '';
   // String selectedPay= '';
 
   int selectedPay = 0;
   List<DateTime>? dateList = [];
   OrderModel? orderModel;
+  OrderBillModel? dataBill;
   double? totalPrice = 0.0;
   double? wallet;
 
@@ -91,24 +95,7 @@ class _OrderPageState extends State<OrderPage> {
     });
   }
 
-  totalBill() {
-    if (isShippingSelected == true) {
-      // totalPrice = totalPrice ?? 0.0;
-      setState(() {
-        totalPrice = totalPrice! + 30000.0;
-      });
-    }
-    if (DateTime.parse(dateList![1].toString())
-            .difference(DateTime.parse(dateList![0].toString()))
-            .inDays <=
-        1) {
-      setState(() {
-        totalPrice = totalPrice! + 30000.0;
-      });
-      // print('order: ${totalPrice}');
-    }
-    return totalPrice;
-  }
+
 
   ShowDataTime() async {
     List<DateTime>? dateTimeList = await showOmniDateTimeRangePicker(
@@ -248,6 +235,59 @@ class _OrderPageState extends State<OrderPage> {
                     style: TextStyle(color: wWhite),
                   ),
                 ),
+                RadioListTile<int>(
+                  value: 1,
+                  groupValue: selectedPay,
+                  activeColor: wWhite,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedPay = value!;
+                    });
+                  },
+                  title: const Text(
+                    'Thanh toán qua VNPay',
+                    style: TextStyle(color: wWhite),
+                  ),
+                  controlAffinity: ListTileControlAffinity.leading,
+                ),
+                RadioListTile<int>(
+                  value: 2,
+                  enableFeedback: serviceDetail.price! > wallet!,
+                  groupValue: selectedPay,
+                  activeColor: wWhite,
+                  onChanged: serviceDetail.price! <= wallet!
+                      ? (value) {
+                          setState(() {
+                            selectedPay = value!;
+                          });
+                        }
+                      : null,
+                  title: const Text(
+                    'Thanh toán qua ví BIFAT',
+                    style: TextStyle(color: wWhite),
+                  ),
+                  subtitle: serviceDetail.price != null &&
+                          serviceDetail.price! > wallet!
+                      ? const Text('Số tiền trong ví không đủ',
+                          style: TextStyle(
+                              color: Color.fromARGB(255, 235, 188, 185)))
+                      : null,
+                ),
+                RadioListTile<int>(
+                  value: 3,
+                  groupValue: selectedPay,
+                  activeColor: wWhite,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedPay = value!;
+                    });
+                  },
+                  title: const Text(
+                    'Thanh toán qua Banking',
+                    style: TextStyle(color: wWhite),
+                  ),
+                  controlAffinity: ListTileControlAffinity.leading,
+                ),
               ]);
   }
 
@@ -258,6 +298,7 @@ class _OrderPageState extends State<OrderPage> {
       provinceModelByCode.forEach((e){
         if(e.code == selectedDistrict){
           nameDistrict = utf8.decode(e.name.toString().runes.toList());
+          print('district from Order: ${nameDistrict}');
         }
       });
     });
@@ -266,9 +307,10 @@ class _OrderPageState extends State<OrderPage> {
   Future<void> _pickWard(newValue) async {
     setState(() {
       selectedWard = newValue ?? '';
-      districtModelByCode.forEach((e){
-        if(e.code == selectedWard){
+      districtModelByCode.forEach((e) {
+        if (e.code == selectedWard) {
           nameWard = utf8.decode(e.name.toString().runes.toList());
+          print('ward from Order: ${nameWard}');
         }
       });
     });
@@ -705,12 +747,7 @@ class _OrderPageState extends State<OrderPage> {
                                     '${utf8.decode(value!.name.toString().runes.toList())}'),
                               );
                             }).toList(),
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                selectedWard = newValue ?? '';
-                                print('ward: $selectedWard');
-                              });
-                            },
+                            onChanged: _pickWard,
                           ),
                           TextField(
                             decoration: const InputDecoration(
@@ -752,7 +789,11 @@ class _OrderPageState extends State<OrderPage> {
       if (isKeyboardVisible) {
         SystemChannels.textInput.invokeMethod('TextInput.setLocale', 'vi');
       }
-      return Scaffold(
+      return userServiceModel == null
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            :Scaffold(
           appBar: AppBar(
             title: Text('Đặt hàng'),
             backgroundColor: wPurBlue,
@@ -779,11 +820,8 @@ class _OrderPageState extends State<OrderPage> {
                                   const EdgeInsets.symmetric(horizontal: 0),
                               child: ElevatedButton(
                                 onPressed: () async {
-                                  print('District: $nameDistrict');
-                                  print('Ward: ${nameWard}');
-                                  print('address: $address');
-                                  totalPrice = 0.0;
-                                  totalBill();
+                                  addressDetail = '';
+                                  addressDetail = '$address, $nameWard, $nameDistrict, Thành phố Hồ Chí Minh';
                                   //gửi dữ liệu dịch từ trang này qua OrderPage
                                   orderModel = OrderModel(
                                     userServiceId: userServiceModel!.id,
@@ -792,29 +830,28 @@ class _OrderPageState extends State<OrderPage> {
                                     materialId: selectedChatLieu,
                                     userVoucherId: '',
                                     description: '',
-                                    address: '$address, $nameWard, $nameDistrict, Thành phố Hồ Chí Minh',
+                                    address: isShippingSelected ? addressDetail : '',
                                     receiveDate: dateList![0].toString(),
                                     deliveryDate: dateList![1].toString(),
                                     totalPrice: totalPrice,
                                     totalQuantity:
                                         double.parse(kilogramController.text),
                                     isShipping: isShippingSelected
-                                        ? 'SHIPPING'
+                                        ? 'SHIPPED'
                                         : 'NOSHIPPED',
                                   );
+                                  dataBill = await UserServiceApi.orderService(orderModel!);
+
                                   Navigator.pushNamed(
                                     context,
                                     "billPage",
                                     arguments: {
                                       'serviceDetail': serviceDetail,
                                       'orderModel': orderModel,
-                                      'fragrantModel': fragrantModel,
-                                      'itemTypeModel': itemTypeModel,
-                                      'materialModel': materialModel,
                                       'payment': selectedPay,
+                                      'dataBill': dataBill,
                                     },
                                   );
-                                  print('order: ${orderModel?.totalPrice}');
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: wPurBlue,
@@ -860,35 +897,37 @@ class _OrderPageState extends State<OrderPage> {
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 0),
                               child: ElevatedButton(
-                                onPressed: () {
-                                  totalPrice = 0.0;
-                                  totalBill();
+                                onPressed: () async {
+                                  addressDetail = '';
+                                  addressDetail = '$address, $nameWard, $nameDistrict, Thành phố Hồ Chí Minh';
+                                  print('address: $addressDetail');
                                   orderModel = OrderModel(
                                     userServiceId: userServiceModel!.id,
                                     fragrantId: selectedMuiHuong,
                                     itemTypeId: selectedLoaiDo,
                                     materialId: selectedChatLieu,
                                     userVoucherId: '',
-                                    description: 'string',
-                                    address: '$address $nameWard, $nameDistrict, Thành phố Hồ Chí Minh',
+                                    description: '',
+                                    address: isShippingSelected ? addressDetail : '',
                                     receiveDate: dateList![0].toString(),
                                     deliveryDate: dateList![1].toString(),
                                     totalPrice: totalPrice! +
                                         serviceDetail.price!.toDouble(),
                                     totalQuantity: 6,
                                     isShipping: isShippingSelected
-                                        ? 'SHIPPING'
+                                        ? 'SHIPPED'
                                         : 'NOSHIPPED',
                                   );
+
+                                  dataBill = await UserServiceApi.orderService(orderModel!);
+
                                   Navigator.pushNamed(
                                     context,
                                     "billPage",
                                     arguments: {
                                       'serviceDetail': serviceDetail,
                                       'orderModel': orderModel,
-                                      'fragrantModel': fragrantModel,
-                                      'itemTypeModel': itemTypeModel,
-                                      'materialModel': materialModel,
+                                      'dataBill': dataBill,
                                       'payment': selectedPay,
                                     },
                                   );
@@ -998,4 +1037,5 @@ class _OrderPageState extends State<OrderPage> {
       print(wallet);
     });
   }
+
 }

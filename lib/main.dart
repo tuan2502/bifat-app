@@ -8,6 +8,7 @@ import 'package:bifat_app/page/profile/proflie_demo.dart';
 import 'package:bifat_app/page/serviceApp/BillPage.dart';
 import 'package:bifat_app/page/serviceApp/LaundryServicePage.dart';
 import 'package:bifat_app/page/serviceApp/OrderPage.dart';
+import 'package:bifat_app/page/tracking/HistoryDetailPage.dart';
 import 'package:bifat_app/page/tracking/TrackingPage.dart';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -54,6 +55,7 @@ class MyApp extends StatelessWidget {
         'profileDemo': (context) => const ProfileDemo(),
         'orderPage': (context) => const OrderPage(),
         'billPage': (context) => const BillPage(),
+        'historyDetail': (context) => const HistoryDetailPage(),
         'errorPage': (context) => const Page404()
       },
     );

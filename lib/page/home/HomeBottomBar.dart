@@ -33,16 +33,16 @@ class HomeBottomBar extends StatelessWidget {
               size: 32,
             ),
           ),
-          InkWell(
-            onTap: () {
-              Navigator.pushNamed(context, 'cartPage');
-            },
-            child: const Icon(
-              Icons.shopping_cart_outlined,
-              color: wWhite,
-              size: 32,
-            ),
-          ),
+          // InkWell(
+          //   onTap: () {
+          //     Navigator.pushNamed(context, 'cartPage');
+          //   },
+          //   child: const Icon(
+          //     Icons.shopping_cart_outlined,
+          //     color: wWhite,
+          //     size: 32,
+          //   ),
+          // ),
           InkWell(
             onTap: () {
               Navigator.pushNamed(context, 'errorPage');

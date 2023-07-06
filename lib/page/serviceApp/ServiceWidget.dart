@@ -30,9 +30,9 @@ class _ServiceWidgetState extends State<ServiceWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+
         children: [
           for (var service in services)
             InkWell(
@@ -48,8 +48,7 @@ class _ServiceWidgetState extends State<ServiceWidget> {
               ),
             ),
         ],
-      ),
-    );
+      );
   }
 
   Future<void> fetchServices() async {

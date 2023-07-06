@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:bifat_app/const/api_const.dart';
 import 'package:bifat_app/models/fragrant_model.dart';
+import 'package:bifat_app/models/history_model.dart';
+import 'package:bifat_app/models/order_bill_model.dart';
 import 'package:bifat_app/models/order_model.dart';
 import 'package:bifat_app/models/user_service_model.dart';
 import 'package:bifat_app/services/firebase_services.dart';
@@ -63,7 +65,7 @@ class UserServiceApi {
   }
 
   //order api
-  static Future orderService(OrderModel orderModel) async {
+  static Future<OrderBillModel> orderService(OrderModel orderModel) async {
     var token = await FirebaseServices.getAccessToken();
 
     var dataInput = jsonEncode(<String, dynamic>{
@@ -80,6 +82,7 @@ class UserServiceApi {
       'totalQuantity': orderModel.totalQuantity,
       'isShipping': orderModel.isShipping,
     });
+    print('order data: $dataInput');
     final url = Uri.parse(
         '${BASE_URL}/order');
     final response = await http.post(
@@ -91,10 +94,14 @@ class UserServiceApi {
       },
       body: dataInput,
     );
+    final body = response.body;
+    final json = jsonDecode(body);
+    final data = json['data'];
+    final message = json['message'];
     if (response.statusCode == 201) {
-     var orderId = jsonDecode(response.body)['data']['orderId'];
-      print('orderId: $orderId');
-      return orderId;
+      print('data: $data');
+      print(message);
+      return OrderBillModel.fromJson(data);
     } else {
       print(response.statusCode);
       throw Exception('Failed to post data');
@@ -113,7 +120,7 @@ class UserServiceApi {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer $token', 
       },
       body: dataInput,
     );
@@ -129,6 +136,7 @@ class UserServiceApi {
    static Future postCostFromVNPay(double totalPrice, String orderId) async {
     var token = await FirebaseServices.getAccessToken();
     String returnUrl = 'https://www.bifatlaundry.website/';
+    print('vnPay');
 
     var dataInput = jsonEncode(<String, dynamic>{
       "amount": totalPrice,
@@ -149,6 +157,7 @@ class UserServiceApi {
     if (response.statusCode == 200) {
       var urlVnpay = jsonDecode(response.body)['data'];
       // print('urlVnpay1: $urlVnpay');
+      print('success');
       return urlVnpay;
     } else {
       print('API post failed');
@@ -176,5 +185,26 @@ class UserServiceApi {
       throw data["message"];
     }
     return FragrantModel.fromJson(data);
+  }
+
+  //get history transactions
+  static Future<HistoryModel> fetchHistory() async {
+    var token = await FirebaseServices.getAccessToken();
+    var url = '$BASE_URL/users/transactions?q=deposit%3A100&page=1&limit=22';
+    final uri = Uri.parse(url);
+    final response = await http.get(uri, headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    });
+    final body = response.body;
+    final json = jsonDecode(body);
+    final data = json['data'];
+    final message = json['message'];
+    if (response.statusCode == 201) {
+      return HistoryModel.fromJson(json);
+    } else {
+      throw Exception('Failed to get data');
+    }
   }
 }

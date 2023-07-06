@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import '../../../models/user_model.dart';
@@ -57,7 +59,7 @@ class _ProfilePicState extends State<ProfilePic> {
           Column(
             children: [
               Text(
-                user.fullname,
+                utf8.decode(user.fullname.toString().runes.toList()),
                 style: const TextStyle(
                   fontSize: 21,
                   fontWeight: FontWeight.bold,
